@@ -39,4 +39,8 @@ export class EventHandler<K> {
 
     return this;
   };
+
+  clear = () => {
+    this.handlers = {};
+  };
 }

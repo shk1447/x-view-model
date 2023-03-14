@@ -22,7 +22,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._property = init_property;
     this._options = options;
     this._reference = 0;
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     this._started = false;
     this.services = new ServiceHandler<R>(this);
   }
@@ -91,22 +91,21 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
 
   private start() {
     if (this._started) return;
-
     Observable.observe(this._observable, this.watch);
+    console.log(this.name, "started");
     this._started = true;
   }
 
   private stop() {
     if (!this._started) return;
-
     Observable.unobserve(this._observable);
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     this._started = false;
   }
 
   public reset() {
     Observable.unobserve(this._observable);
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     Observable.observe(this._observable, this.watch);
   }
 }

@@ -32,16 +32,33 @@ export const useViewModel = <T>(
   T,
   <K extends GetFunctionKeys<T>>(
     name: K,
-    payload: GetFunctionParams<T>[K]
+    payload: GetFunctionParams<T>[K],
+    options?: {
+      sync: boolean;
+    }
   ) => void
 ] => {
   const state = vm.watcher(keys ? keys : []);
 
-  const send = <K extends GetFunctionKeys<T>>(
+  const send = async <K extends GetFunctionKeys<T>>(
     name: K,
-    payload: GetFunctionParams<T>[K]
+    payload: GetFunctionParams<T>[K],
+    options?: {
+      sync: boolean;
+    }
   ) => {
-    vm.handler.services.emit(name, [payload]);
+    if (options && options.sync) {
+      try {
+        await (vm.handler.property[name] as any).apply(vm.handler.state, [
+          payload,
+        ]);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    } else {
+      vm.handler.services.emit(name, [payload]);
+    }
   };
 
   return [state, send];
