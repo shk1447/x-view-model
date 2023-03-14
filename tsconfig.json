@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "allowJs": true,
+    "target": "ES2017",
+    "skipLibCheck": true,
+    "lib": ["es6", "dom", "dom.iterable", "esnext"],
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["./src/**/*"]
+}
