@@ -1,0 +1,34 @@
+{
+  "name": "x-view-model",
+  "version": "1.0.0",
+  "description": "watch and handle properties like ViewModel",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shk1447/x-view-model.git"
+  },
+  "author": "seokhwan.kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shk1447/x-view-model/issues"
+  },
+  "homepage": "https://github.com/shk1447/x-view-model#readme",
+  "keywords": [
+    "state",
+    "store",
+    "react",
+    "event",
+    "mvvm"
+  ],
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26",
+    "typescript": "^4.9.4"
+  }
+}
