@@ -108,7 +108,7 @@ function App() {
         <button
           onClick={async () => {
             await send("wait", state.amount);
-            state.amount = 0;
+            state.count = 0;
           }}
         >
           wait and clear
