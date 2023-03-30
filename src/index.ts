@@ -10,6 +10,20 @@ export type ViewModel<T> = {
   handler: PropertyHandler<T>;
 };
 
+export const extendsViewModel = <T, ET>(
+  baseModel: ViewModel<T>,
+  data: ET,
+  options?: PropertyHandlerOptions
+) => {
+  return registViewModel<T & ET>(
+    {
+      ...baseModel.handler.property,
+      ...data,
+    },
+    options
+  );
+};
+
 export const registViewModel = <T>(
   data: T,
   options?: PropertyHandlerOptions
