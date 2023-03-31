@@ -23,9 +23,3 @@ export type GetFunctionKeys<T> = {
 export type GetFunctionParams<T> = {
   [K in keyof T]: T[K] extends (args: any) => void ? Parameters<T[K]>[0] : T[K];
 };
-
-export type DataModel<T> = T extends (
-  ...args: never[]
-) => Promise<infer Response>
-  ? Response
-  : never;

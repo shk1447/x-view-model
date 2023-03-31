@@ -1,3 +1,4 @@
+import { NameSpacesHandler } from "./core/handler/NameSpacesHandler";
 import {
   PropertyHandler,
   PropertyHandlerOptions,
@@ -5,23 +6,15 @@ import {
 import useInterfaceHandle from "./core/hooks/useInterfaceHandle";
 import { GetDotKeys, GetFunctionKeys, GetFunctionParams } from "./core/types";
 
+export type DataModel<T> = T extends (
+  ...args: never[]
+) => Promise<infer Response>
+  ? Response
+  : never;
+
 export type ViewModel<T> = {
   watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => T;
   handler: PropertyHandler<T>;
-};
-
-export const extendsViewModel = <T, ET>(
-  baseModel: ViewModel<T>,
-  data: ET,
-  options?: PropertyHandlerOptions
-) => {
-  return registViewModel<T & ET>(
-    {
-      ...baseModel.handler.property,
-      ...data,
-    },
-    options
-  );
 };
 
 export const registViewModel = <T>(
