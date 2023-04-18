@@ -1,6 +1,8 @@
-import React from "react";
+import React, { createElement } from "react";
 
-import { registViewModel, useViewModel } from "property-process";
+import { registViewModel, useViewModel } from "x-view-model";
+
+import { PixelUtils } from "./utils/pixel";
 
 type CountType = {
   count: number;
@@ -32,7 +34,7 @@ const appViewModel = registViewModel<CountType>(
       this.count = this.count - 1;
     },
   },
-  { deep: true }
+  { deep: true, name: "AppViewModel" }
 );
 
 function App() {
@@ -58,6 +60,34 @@ function App() {
         <span>{state.nested.test.length}</span>
         <button onClick={() => state.nested.test.push("1")}>Nested Test</button>
       </div>
+
+      <input
+        type="file"
+        onChange={(e) => {
+          if (e.target.files) {
+            const file = e.target.files[0];
+            const blobURL = window.URL.createObjectURL(file);
+            new Promise((resolve) => {
+              let img = document.createElement("img");
+              img.addEventListener("load", () => {
+                const [width, height] = [img.width, img.height];
+
+                // an intermediate "buffer" 2D context is necessary
+                const canvas = document.createElement("canvas") as any;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, width, height);
+
+                const pixel = new PixelUtils();
+                const svg = pixel.convert(imageData);
+                console.log(svg.renderG());
+              });
+              img.src = blobURL;
+            });
+          }
+        }}
+      ></input>
     </div>
   );
 }
