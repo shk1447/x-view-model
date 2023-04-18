@@ -1,6 +1,6 @@
 {
   "name": "x-view-model",
-  "version": "1.0.1",
+  "version": "1.0.9",
   "description": "watch and handle properties like ViewModel",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

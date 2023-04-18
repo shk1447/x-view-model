@@ -32,8 +32,10 @@ Using `x-view-model` will bring a lot of convenience as follows:
 | Usually need to set multiple useStates, can't update property values at fine granularity                                    | Support update and deconstruct data by object form, support update property values at fine granularity |
 | When the component reaches a certain complexity, the code piled up together will become more and more difficult to maintain | UI and logic are well separated, code is well organized                                                |
 | The closure trap problem of React Hook                                                                                      | Since the methods are maintained in the class, there is no such problem                                |
+| there is thinking burden while using useReducer+context to global shared state                                              | an intuitive api and simple to use                                                                     |
+| useState updater can't implement immutable data, even memo wrapped subcomponents will be re-rendered                        | can implement immutable data by state keys, won't re-render subcomponents                              |
 
-## Install
+## Installation
 
 `npm install --save x-view-model`
 `yarn add x-view-model`
@@ -74,8 +76,15 @@ const appViewModel = registViewModel<CountType>(
     decrease() {
       this.count = this.count - 1;
     },
+    async wait(sec: number) {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, sec * 1000);
+      });
+    },
   },
-  { deep: true }
+  { deep: true, name: "AppViewModel" }
 );
 
 function App() {
@@ -96,6 +105,14 @@ function App() {
         <button onClick={() => send("increase", { amount: 1 })}>+</button>
         <span>{state.count}</span>
         <button onClick={() => send("decrease", { amount: 1 })}>-</button>
+        <button
+          onClick={async () => {
+            await send("wait", state.amount);
+            state.count = 0;
+          }}
+        >
+          wait and clear
+        </button>
       </div>
       <button onClick={() => state.nested.test.push("1")}>Nested Test</button>
     </div>

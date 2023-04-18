@@ -1,4 +1,10 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { PropertyHandler } from "../handler/PropertyHandler";
 import { GetDotKeys } from "../types";
 
@@ -8,11 +14,12 @@ const useInterfaceHandle = <R>(
 ): R => {
   const [renderCount, setRenderCount] = useState<number>(0);
 
+  const changeState = useCallback(() => {
+    setRenderCount((prev: number) => prev + 1);
+  }, [keys, handle]);
+
   useMemo(() => {
     handle.increaseReference();
-    const changeState = () => {
-      setRenderCount((prev: number) => prev + 1);
-    };
 
     if (Array.isArray(keys)) {
       keys.forEach((key) => {
@@ -21,7 +28,9 @@ const useInterfaceHandle = <R>(
     } else {
       handle.on(keys, changeState);
     }
+  }, [handle]);
 
+  useEffect(() => {
     return () => {
       handle.decreaseReference();
       if (Array.isArray(keys)) {
@@ -32,7 +41,7 @@ const useInterfaceHandle = <R>(
         handle.off(keys, changeState);
       }
     };
-  }, []);
+  }, [handle]);
 
   return handle.state as R;
 };

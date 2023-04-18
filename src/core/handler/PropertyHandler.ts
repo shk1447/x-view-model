@@ -1,10 +1,11 @@
 import { Change, ObjectObserver, Observable } from "../observer";
 import { GetDotKeys } from "../types";
 import { EventHandler } from "./EventHandler";
+import { NameSpacesHandler } from "./NameSpacesHandler";
 import { ServiceHandler } from "./ServiceHandler";
 
 export type PropertyHandlerOptions = {
-  name?: string;
+  name: string;
   // 하위 데이터 변경시 이벤트가 발생됩니다.
   deep: boolean;
 };
@@ -17,14 +18,17 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private _options?: PropertyHandlerOptions;
 
   public services: ServiceHandler<R>;
+
+  public namespaces: NameSpacesHandler;
   constructor(init_property: R, options?: PropertyHandlerOptions) {
     super();
     this._property = init_property;
     this._options = options;
     this._reference = 0;
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     this._started = false;
     this.services = new ServiceHandler<R>(this);
+    this.namespaces = NameSpacesHandler.getInstance();
   }
 
   get state() {
@@ -50,8 +54,10 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private set reference(val: number) {
     this._reference = val;
     if (this._reference > 0) {
+      if (this.name) this.namespaces.addNamespace<R>(this.name, this);
       this.start();
     } else {
+      if (this.name) this.namespaces.removeNamespace(this.name);
       this.stop();
     }
   }
@@ -91,22 +97,21 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
 
   private start() {
     if (this._started) return;
-
     Observable.observe(this._observable, this.watch);
+    console.log(this.name, "started");
     this._started = true;
   }
 
   private stop() {
     if (!this._started) return;
-
     Observable.unobserve(this._observable);
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     this._started = false;
   }
 
   public reset() {
     Observable.unobserve(this._observable);
-    this._observable = Observable.from(this._property);
+    this._observable = Observable.from({ ...this._property });
     Observable.observe(this._observable, this.watch);
   }
 }
