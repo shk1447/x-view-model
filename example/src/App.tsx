@@ -13,6 +13,7 @@ type CountType = {
       level: number;
     };
   };
+  src: string;
   increase: (payload: { amount: number }) => void;
   decrease: (payload: { amount: number }) => void;
 };
@@ -27,6 +28,7 @@ const appViewModel = registViewModel<CountType>(
         level: 1,
       },
     },
+    src: "",
     increase(payload) {
       this.count = this.count + 1 + payload.amount;
     },
@@ -38,7 +40,7 @@ const appViewModel = registViewModel<CountType>(
 );
 
 function App() {
-  const [state, send] = useViewModel(appViewModel, ["count", "nested"]);
+  const [state, send] = useViewModel(appViewModel, ["count", "nested", "src"]);
 
   return (
     <div
@@ -49,6 +51,7 @@ function App() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "auto",
       }}
     >
       <div style={{ display: "flex", gap: "4px" }}>
@@ -60,6 +63,37 @@ function App() {
         <span>{state.nested.test.length}</span>
         <button onClick={() => state.nested.test.push("1")}>Nested Test</button>
       </div>
+      <img
+        src={state.src}
+        onLoad={async (e) => {
+          const img = e.target as any;
+          const [width, height] = [img.width, img.height];
+
+          // an intermediate "buffer" 2D context is necessary
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d") as any;
+          ctx.drawImage(img, 0, 0, width, height);
+          // console.log(width, height);
+          // const a = document.getElementById("test");
+          // a?.appendChild(canvas);
+
+          const imageData = ctx.getImageData(0, 0, width, height);
+
+          var selector = "f1";
+          console.time(selector);
+          const pixel = new PixelUtils();
+          const svg = pixel.convert(imageData);
+
+          // console.log(Object.values(svg.points).length);
+          // console.log(svg.colors.length);
+          console.log(svg.renderG());
+          console.timeEnd(selector);
+        }}
+      />
+      <div id="test"></div>
 
       <input
         type="file"
@@ -67,24 +101,13 @@ function App() {
           if (e.target.files) {
             const file = e.target.files[0];
             const blobURL = window.URL.createObjectURL(file);
-            new Promise((resolve) => {
-              let img = document.createElement("img");
-              img.addEventListener("load", () => {
-                const [width, height] = [img.width, img.height];
+            state.src = blobURL;
+            // new Promise((resolve) => {
+            //   let img = document.createElement("img");
+            //   img.addEventListener("load", () => {
 
-                // an intermediate "buffer" 2D context is necessary
-                const canvas = document.createElement("canvas") as any;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-
-                const imageData = ctx.getImageData(0, 0, width, height);
-
-                const pixel = new PixelUtils();
-                const svg = pixel.convert(imageData);
-                console.log(svg.renderG());
-              });
-              img.src = blobURL;
-            });
+            // });
+            // img.src = blobURL;
           }
         }}
       ></input>
