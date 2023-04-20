@@ -103,8 +103,6 @@ class Path {
         keys.splice(keys.indexOf(`${nextD[0].x},${nextD[0].y}`), 1);
         this.next(nextD[0], curr, points, keys, first);
       }
-    } else {
-      console.log("line...");
     }
   }
   toObjects() {
@@ -129,7 +127,7 @@ class Path {
 
   toPaths() {
     this.toObjects();
-    console.log(this.objects);
+
     const paths: string[] = [];
     this.objects.map((_d) => {
       let path = "";

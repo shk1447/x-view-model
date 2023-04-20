@@ -68,19 +68,28 @@ function App() {
         onLoad={async (e) => {
           const img = e.target as any;
           const [width, height] = [img.width, img.height];
-
+          // 퍼포먼스에 중대한 역할을 한다!!!
+          const scale = 0.1;
           // an intermediate "buffer" 2D context is necessary
           const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
+          canvas.width = width * scale;
+          canvas.height = height * scale;
 
           const ctx = canvas.getContext("2d") as any;
-          ctx.drawImage(img, 0, 0, width, height);
+
+          ctx.imageSmoothingEnabled = false;
+
+          ctx.drawImage(img, 0, 0, width * scale, height * scale);
           // console.log(width, height);
           // const a = document.getElementById("test");
           // a?.appendChild(canvas);
 
-          const imageData = ctx.getImageData(0, 0, width, height);
+          const imageData = ctx.getImageData(
+            0,
+            0,
+            width * scale,
+            height * scale
+          );
 
           var selector = "f1";
           console.time(selector);
@@ -89,8 +98,9 @@ function App() {
 
           // console.log(Object.values(svg.points).length);
           // console.log(svg.colors.length);
-          console.log(svg.renderG());
+          const aa = svg.renderG();
           console.timeEnd(selector);
+          console.log(aa);
         }}
       />
       <div id="test"></div>

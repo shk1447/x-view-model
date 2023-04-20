@@ -79,9 +79,8 @@ class Svg {
       ${testPaths}
     </svg>
     `;
-    console.log(svg);
 
-    return paths;
+    return svg;
   }
 }
 
