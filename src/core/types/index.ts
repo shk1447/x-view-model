@@ -21,5 +21,9 @@ export type GetFunctionKeys<T> = {
   : never;
 
 export type GetFunctionParams<T> = {
-  [K in keyof T]: T[K] extends (args: any) => void ? Parameters<T[K]>[0] : T[K];
+  [K in keyof T]: T[K] extends (args: any) => void ? Parameters<T[K]>[0] : any;
+};
+
+export type GetFunctionReturn<T> = {
+  [K in keyof T]: T[K] extends (args: any) => any ? ReturnType<T[K]> : void;
 };

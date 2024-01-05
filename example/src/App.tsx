@@ -1,127 +1,57 @@
-import React, { createElement } from "react";
-
-import { registViewModel, useViewModel } from "x-view-model";
-
-import { PixelUtils } from "./utils/pixel";
-
-type CountType = {
-  count: number;
-  multiply: number;
-  nested: {
-    test: string[];
-    deepTest: {
-      level: number;
-    };
-  };
-  src: string;
-  increase: (payload: { amount: number }) => void;
-  decrease: (payload: { amount: number }) => void;
-};
-
-const appViewModel = registViewModel<CountType>(
-  {
-    count: 0,
-    multiply: 0,
-    nested: {
-      test: [],
-      deepTest: {
-        level: 1,
-      },
-    },
-    src: "",
-    increase(payload) {
-      this.count = this.count + 1 + payload.amount;
-    },
-    decrease() {
-      this.count = this.count - 1;
-    },
-  },
-  { deep: true, name: "AppViewModel" }
-);
+import React from "react";
+import { Units, Theme } from "vases-ui";
 
 function App() {
-  const [state, send] = useViewModel(appViewModel, ["count", "nested", "src"]);
+  const theme = Theme.createMyTheme('light',{
+    typography: {
+      button: {
+        textTransform:'none'
+      }
+    },
+    custom: {
+      design:{
+        pallete: {
+          neutral: {
+            black: "",
+            white: "",
+            grey100: "",
+            grey80: "",
+            grey60: "",
+            grey20: "",
+            grey10: "",
+            grey5: ""
+          },
+          brand: {
+            navy: "",
+            orange: "",
+            skyblue: "",
+            turquoise: ""
+          },
+          semantic: {
+            success: "",
+            warning: "",
+            error100: "",
+            error110: ""
+          },
+          primary110: "",
+          primary100: "",
+          primary60: "",
+          primary40: "",
+          primary20: ""
+        }
+      }
+    },
+    custom_mode:'ligth'
+
+  })
+
+  const _theme = Theme.useMyTheme();
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "auto",
-      }}
-    >
-      <div style={{ display: "flex", gap: "4px" }}>
-        <button onClick={() => send("increase", { amount: 1 })}>+</button>
-        <span>{state.count}</span>
-        <button onClick={() => send("decrease", { amount: 1 })}>-</button>
-      </div>
-      <div style={{ display: "flex", gap: "4px" }}>
-        <span>{state.nested.test.length}</span>
-        <button onClick={() => state.nested.test.push("1")}>Nested Test</button>
-      </div>
-      <img
-        src={state.src}
-        onLoad={async (e) => {
-          const img = e.target as any;
-          const [width, height] = [img.width, img.height];
-          // 퍼포먼스에 중대한 역할을 한다!!!
-          const scale = 0.1;
-          // an intermediate "buffer" 2D context is necessary
-          const canvas = document.createElement("canvas");
-          canvas.width = width * scale;
-          canvas.height = height * scale;
-
-          const ctx = canvas.getContext("2d") as any;
-
-          ctx.imageSmoothingEnabled = false;
-
-          ctx.drawImage(img, 0, 0, width * scale, height * scale);
-          // console.log(width, height);
-          // const a = document.getElementById("test");
-          // a?.appendChild(canvas);
-
-          const imageData = ctx.getImageData(
-            0,
-            0,
-            width * scale,
-            height * scale
-          );
-
-          var selector = "f1";
-          console.time(selector);
-          const pixel = new PixelUtils();
-          const svg = pixel.convert(imageData);
-
-          // console.log(Object.values(svg.points).length);
-          // console.log(svg.colors.length);
-          const aa = svg.renderG();
-          console.timeEnd(selector);
-          console.log(aa);
-        }}
-      />
-      <div id="test"></div>
-
-      <input
-        type="file"
-        onChange={(e) => {
-          if (e.target.files) {
-            const file = e.target.files[0];
-            const blobURL = window.URL.createObjectURL(file);
-            state.src = blobURL;
-            // new Promise((resolve) => {
-            //   let img = document.createElement("img");
-            //   img.addEventListener("load", () => {
-
-            // });
-            // img.src = blobURL;
-          }
-        }}
-      ></input>
-    </div>
+    <Theme.ThemeProvider theme={theme}>
+      <Units.LoadingButton loading={true}>test</Units.LoadingButton>
+      <Units.Button variant="contained" color="primary">Button</Units.Button>
+    </Theme.ThemeProvider>
   );
 }
 

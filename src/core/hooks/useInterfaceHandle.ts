@@ -8,10 +8,34 @@ import {
 import { PropertyHandler } from "../handler/PropertyHandler";
 import { GetDotKeys } from "../types";
 
+const deepPartialCopy = (obj: any, keys: string[], _key: string) => {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  let copy:any;
+  if(Array.isArray(obj)) {
+    if(_key && keys.includes(_key)) {
+      copy = obj;
+    }
+  } else {
+    copy =  {};
+    for (let key in obj) {
+      if(_key == "") {
+        copy[key] = deepPartialCopy(obj[key], keys, key);
+      } else if(keys.includes(_key)) {
+        copy[key] = deepPartialCopy(obj[key], keys, _key + "." + key);
+      }
+
+    }
+  }
+  return copy;
+}
+
 const useInterfaceHandle = <R>(
   keys: GetDotKeys<R> | GetDotKeys<R>[],
   handle: PropertyHandler<R>
-): R => {
+): [R, R] => {
   const [renderCount, setRenderCount] = useState<number>(0);
 
   const changeState = useCallback(() => {
@@ -43,7 +67,8 @@ const useInterfaceHandle = <R>(
     };
   }, [handle]);
 
-  return handle.state as R;
+  
+  return [handle.state as R, deepPartialCopy(handle.state, keys as string[], "") as R]
 };
 
 export default useInterfaceHandle;

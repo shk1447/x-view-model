@@ -4,7 +4,7 @@ import {
   PropertyHandlerOptions,
 } from "./core/handler/PropertyHandler";
 import useInterfaceHandle from "./core/hooks/useInterfaceHandle";
-import { GetDotKeys, GetFunctionKeys, GetFunctionParams } from "./core/types";
+import { GetDotKeys, GetFunctionKeys, GetFunctionParams, GetFunctionReturn } from "./core/types";
 
 export type DataModel<T> = T extends (
   ...args: never[]
@@ -13,7 +13,7 @@ export type DataModel<T> = T extends (
   : never;
 
 export type ViewModel<T> = {
-  watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => T;
+  watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => [T, T];
   handler: PropertyHandler<T>;
 };
 
@@ -24,8 +24,8 @@ export const registViewModel = <T>(
   const handler = new PropertyHandler<T>(data, options);
 
   const vm = {
-    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): T =>
-      useInterfaceHandle<T>(keys, handler) as T,
+    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): [T, T] =>
+      useInterfaceHandle<T>(keys, handler) as [T, T],
     handler,
   };
 
@@ -42,31 +42,38 @@ export const useViewModel = <T>(
     payload: GetFunctionParams<T>[K],
     options?: {
       sync: boolean;
+      callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => void
+  ) => void,
+  T
 ] => {
-  const state = vm.watcher(keys ? keys : []);
+  const [state, data] = vm.watcher(keys ? keys : []);
 
   const send = async <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
     options?: {
       sync: boolean;
+      callback: (ret: GetFunctionReturn<T>[K]) => void;
     }
   ) => {
     if (options && options.sync) {
       try {
-        await (vm.handler.property[name] as any).apply(vm.handler.state, [
+        const res = await (vm.handler.property[name] as any).apply(vm.handler.state, [
           payload,
         ]);
+        if(options.callback) {
+          options.callback(res)
+        }
         return true;
       } catch (error) {
         return false;
       }
     } else {
       vm.handler.services.emit(name, [payload]);
+      return false
     }
   };
 
-  return [state, send];
+  return [state, send, data];
 };
