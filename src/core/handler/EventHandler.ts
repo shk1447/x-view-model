@@ -26,11 +26,15 @@ export class EventHandler<K> {
     return this;
   };
 
+  callEmitFromMT = function callEmitFromMT() {
+    this.func.apply(null, this.args ? this.args : []);
+  }
+
   emit = (event: K, args?: any) => {
     if (this.handlers[event]) {
       for (let i = 0; i < this.handlers[event].length; i++) {
         try {
-          this.handlers[event][i].apply(null, args ? args : []);
+          queueMicrotask(this.callEmitFromMT.bind({func: this.handlers[event][i], args:args}))
         } catch (err) {
           console.log(err);
         }

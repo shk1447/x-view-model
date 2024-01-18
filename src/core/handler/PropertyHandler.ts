@@ -25,7 +25,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._property = init_property;
     this._options = options;
     this._reference = 0;
-    this._observable = Observable.from({ ...this._property });
+    this._observable = Observable.from({ ...this._property }, {async:true});
     this._started = false;
     this.services = new ServiceHandler<R>(this);
     this.namespaces = NameSpacesHandler.getInstance();

@@ -35,12 +35,12 @@ const deepPartialCopy = (obj: any, keys: string[], _key: string) => {
 const useInterfaceHandle = <R>(
   keys: GetDotKeys<R> | GetDotKeys<R>[],
   handle: PropertyHandler<R>
-): [R, R] => {
+): R => {
   const [renderCount, setRenderCount] = useState<number>(0);
 
   const changeState = useCallback(() => {
     setRenderCount((prev: number) => prev + 1);
-  }, [keys, handle]);
+  }, []);
 
   useMemo(() => {
     handle.increaseReference();
@@ -68,7 +68,7 @@ const useInterfaceHandle = <R>(
   }, [handle]);
 
   
-  return [handle.state as R, deepPartialCopy(handle.state, keys as string[], "") as R]
+  return handle.state as R
 };
 
 export default useInterfaceHandle;

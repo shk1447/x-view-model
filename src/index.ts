@@ -13,7 +13,7 @@ export type DataModel<T> = T extends (
   : never;
 
 export type ViewModel<T> = {
-  watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => [T, T];
+  watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => T;
   handler: PropertyHandler<T>;
 };
 
@@ -24,8 +24,8 @@ export const registViewModel = <T>(
   const handler = new PropertyHandler<T>(data, options);
 
   const vm = {
-    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): [T, T] =>
-      useInterfaceHandle<T>(keys, handler) as [T, T],
+    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): T =>
+      useInterfaceHandle<T>(keys, handler) as T,
     handler,
   };
 
@@ -44,10 +44,9 @@ export const useViewModel = <T>(
       sync: boolean;
       callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => void,
-  T
+  ) => void
 ] => {
-  const [state, data] = vm.watcher(keys ? keys : []);
+  const state = vm.watcher(keys ? keys : []);
 
   const send = async <K extends GetFunctionKeys<T>>(
     name: K,
@@ -75,5 +74,5 @@ export const useViewModel = <T>(
     }
   };
 
-  return [state, send, data];
+  return [state, send];
 };
