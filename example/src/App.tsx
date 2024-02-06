@@ -1,57 +1,92 @@
-import React from "react";
-import { Units, Theme } from "vases-ui";
+import React, { useEffect, useMemo, useState } from "react";
+
+import { registViewFlow, useViewFlow } from "x-view-model";
+
+type UserContext = {
+  id: string;
+  setId: (id: string) => void;
+};
+
+type UserFlow = {
+  ready: {};
+  login: {
+    fail: {};
+    success: {};
+  };
+  main: {};
+};
+
+const vf = registViewFlow<UserContext, UserFlow>(
+  {
+    id: "",
+    setId: function (id: string): void {
+      this.id = id;
+    },
+  },
+  {
+    ready: {
+      invoke: function (context: UserContext): void {
+        console.log("ready!!!");
+      },
+    },
+    login: {
+      invoke: function (context: UserContext): void {
+        // alert(context.id);
+      },
+      onDone: "#login.success",
+      onError: "#login.fail",
+    },
+    "login.fail": {
+      invoke: function (context: UserContext): void {
+        context.id = "";
+      },
+      onDone: "#ready",
+      onError: "#ready",
+    },
+    "login.success": {
+      invoke: function (context: UserContext): void {
+        // console.log("login success action!!?");
+      },
+      onDone: "#main",
+      onError: "#main",
+    },
+    main: {
+      invoke: function (context: UserContext): void {
+        // console.log("go to main!!!");
+      },
+    },
+  }
+);
 
 function App() {
-  const theme = Theme.createMyTheme('light',{
-    typography: {
-      button: {
-        textTransform:'none'
-      }
-    },
-    custom: {
-      design:{
-        pallete: {
-          neutral: {
-            black: "",
-            white: "",
-            grey100: "",
-            grey80: "",
-            grey60: "",
-            grey20: "",
-            grey10: "",
-            grey5: ""
-          },
-          brand: {
-            navy: "",
-            orange: "",
-            skyblue: "",
-            turquoise: ""
-          },
-          semantic: {
-            success: "",
-            warning: "",
-            error100: "",
-            error110: ""
-          },
-          primary110: "",
-          primary100: "",
-          primary60: "",
-          primary40: "",
-          primary20: ""
-        }
-      }
-    },
-    custom_mode:'ligth'
+  const [flows, setFlows] = useState<string>("");
+  const [[current, flow], [state, send]] = useViewFlow(vf, ["id"]);
+  useMemo(() => {
+    flow("#ready");
+  }, []);
 
-  })
-
-  const _theme = Theme.useMyTheme();
+  useEffect(() => {
+    if (current) {
+      alert(current);
+    }
+  }, [current]);
 
   return (
-    <Theme.ThemeProvider theme={theme}>
-      <Units.LoadingButton loading={true}>test</Units.LoadingButton>
-      <Units.Button variant="contained" color="primary">Button</Units.Button>
-    </Theme.ThemeProvider>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+      }}
+    >
+      <div>{flows}</div>
+      <input
+        value={state.id}
+        onChange={(e) => send("setId", e.target.value)}
+      ></input>
+      <button onClick={() => flow("#login")}>Login</button>
+    </div>
   );
 }
 
