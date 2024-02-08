@@ -9,7 +9,7 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
   _flow: Record<GetDotKeys<F>, FlowDecision<T, F>>;
   _handler: PropertyHandler<T>;
   _current: GetDotKeys<F>;
-  _fn: Function;
+  _fns: Function[];
 
   constructor(
     flow: Record<GetDotKeys<F>, FlowDecision<T, F>>,
@@ -18,6 +18,7 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
     super();
     this._flow = flow;
     this._handler = handler;
+    this._fns = [];
   }
 
   get current() {
@@ -26,32 +27,44 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
 
   set current(val) {
     this._current = val;
-    this._fn(val);
+    this._fns.forEach((d) => {
+      d(val);
+    });
   }
 
   public onChangeCurrent = (fn) => {
-    this._fn = fn;
+    this._fns.push(fn);
   };
 
-  send = async (target: PrefixCode<GetDotKeys<F>>) => {
+  public offChangeCurrent = (fn) => {
+    this._fns.splice(this._fns.indexOf(fn), 1);
+  };
+
+  send = async (target: PrefixCode<GetDotKeys<F>>, err?: any) => {
     const pick = this._flow[target.replace("#", "")] as FlowDecision<T, F>;
     if (pick) {
       try {
-        await pick.invoke(this._handler.state);
+        await pick.invoke(this._handler.state, err);
         this.current = target.replace("#", "") as GetDotKeys<F>;
         if (pick.onDone) {
           if (typeof pick.onDone == "string") {
             await this.send(pick.onDone);
           } else {
             target = await pick.onDone(this._handler.state);
+            if (target) {
+              await this.send(target);
+            }
           }
         }
       } catch (error) {
         if (pick.onError) {
           if (typeof pick.onError == "string") {
-            await this.send(pick.onError);
+            await this.send(pick.onError, error);
           } else {
-            target = await pick.onError(this._handler.state);
+            target = await pick.onError(this._handler.state, err);
+            if (target) {
+              await this.send(target, error);
+            }
           }
         }
       }

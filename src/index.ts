@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FlowHanlder } from "./core/handler/FlowHandler";
 import { NameSpacesHandler } from "./core/handler/NameSpacesHandler";
 import {
@@ -31,13 +31,18 @@ export type ViewFlow<T, F> = ViewModel<T> & {
 export type PrefixCode<T> = T extends string ? `#${T}` : never;
 
 export type FlowDecision<T, F> = {
-  invoke: (context: PropertyHandler<T>["state"]) => void;
+  invoke: (context: PropertyHandler<T>["state"], err?: any) => void;
   onDone?:
     | PrefixCode<GetDotKeys<F>>
-    | ((context: PropertyHandler<T>["state"]) => PrefixCode<GetDotKeys<F>>);
+    | ((
+        context: PropertyHandler<T>["state"]
+      ) => PrefixCode<GetDotKeys<F>> | undefined);
   onError?:
     | PrefixCode<GetDotKeys<F>>
-    | ((context: PropertyHandler<T>["state"]) => PrefixCode<GetDotKeys<F>>);
+    | ((
+        context: PropertyHandler<T>["state"],
+        err?: any
+      ) => PrefixCode<GetDotKeys<F>> | undefined);
 };
 
 export const registViewFlow = <T, F>(
@@ -92,9 +97,17 @@ export const useViewFlow = <T, F>(
 ] => {
   const [state, send] = useViewModel(vf, keys);
   const [current, setCurrent] = useState<GetDotKeys<F>>();
-  vf.fHandler.onChangeCurrent((val) => {
-    setCurrent(val);
-  });
+
+  useMemo(() => {
+    const update = (val) => {
+      setCurrent(val);
+    };
+    vf.fHandler.onChangeCurrent(update);
+
+    return () => {
+      vf.fHandler.offChangeCurrent(update);
+    };
+  }, []);
 
   return [
     [current, vf.fHandler.send],

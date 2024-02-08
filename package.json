@@ -1,9 +1,12 @@
 {
   "name": "x-view-model",
-  "version": "1.2.7",
+  "version": "1.3.5",
   "description": "watch and handle properties like ViewModel",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "xvm": "./bin/xvm.js"
+  },
   "scripts": {
     "build": "tsc"
   },
@@ -25,6 +28,9 @@
     "mvvm"
   ],
   "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "inquirer": "^8.0.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0"
   },
