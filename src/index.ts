@@ -20,12 +20,11 @@ export type DataModel<T> = T extends (
   : never;
 
 export type ViewModel<T> = {
-  watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]) => T;
-  handler: PropertyHandler<T>;
+  context: PropertyHandler<T>;
 };
 
 export type ViewFlow<T, F> = ViewModel<T> & {
-  fHandler: FlowHanlder<F, T>;
+  flow: FlowHanlder<F, T>;
 };
 
 export type PrefixCode<T> = T extends string ? `#${T}` : never;
@@ -54,10 +53,8 @@ export const registViewFlow = <T, F>(
   const fHandler = new FlowHanlder<F, T>(flow, handler);
 
   const vm = {
-    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): T =>
-      useInterfaceHandle<T>(keys, handler) as T,
-    handler: handler,
-    fHandler: fHandler,
+    context: handler,
+    flow: fHandler,
   };
 
   return vm;
@@ -70,9 +67,7 @@ export const registViewModel = <T>(
   const handler = new PropertyHandler<T>(data, options);
 
   const vm = {
-    watcher: (keys: GetDotKeys<T> | GetDotKeys<T>[]): T =>
-      useInterfaceHandle<T>(keys, handler) as T,
-    handler,
+    context: handler,
   };
 
   return vm;
@@ -102,15 +97,15 @@ export const useViewFlow = <T, F>(
     const update = (val) => {
       setCurrent(val);
     };
-    vf.fHandler.onChangeCurrent(update);
+    vf.flow.onChangeCurrent(update);
 
     return () => {
-      vf.fHandler.offChangeCurrent(update);
+      vf.flow.offChangeCurrent(update);
     };
   }, []);
 
   return [
-    [current, vf.fHandler.send],
+    [current, vf.flow.send],
     [state, send],
   ];
 };
@@ -129,7 +124,7 @@ export const useViewModel = <T>(
     }
   ) => void
 ] => {
-  const state = vm.watcher(keys ? keys : []);
+  const state = useInterfaceHandle(keys, vm.context);
 
   const send = async <K extends GetFunctionKeys<T>>(
     name: K,
@@ -141,8 +136,8 @@ export const useViewModel = <T>(
   ) => {
     if (options && options.sync) {
       try {
-        const res = await (vm.handler.property[name] as any).apply(
-          vm.handler.state,
+        const res = await (vm.context.property[name] as any).apply(
+          vm.context.state,
           [payload]
         );
         if (options.callback) {
@@ -153,7 +148,7 @@ export const useViewModel = <T>(
         return false;
       }
     } else {
-      vm.handler.services.emit(name, [payload]);
+      vm.context.services.emit(name, [payload]);
       return false;
     }
   };
