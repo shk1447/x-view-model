@@ -16,7 +16,7 @@ type UserFlow = {
   main: {};
 };
 
-const vf = registViewFlow<UserContext, UserFlow>(
+const AppViewFlow = registViewFlow<UserContext, UserFlow>(
   {
     id: "",
     setId: function (id: string): void {
@@ -59,8 +59,7 @@ const vf = registViewFlow<UserContext, UserFlow>(
 );
 
 function App() {
-  const [flows, setFlows] = useState<string>("");
-  const [[current, flow], [state, send]] = useViewFlow(vf, ["id"]);
+  const [[current, flow], [state, send]] = useViewFlow(AppViewFlow, ["id"]);
   useMemo(() => {
     flow("#ready");
   }, []);
@@ -80,7 +79,7 @@ function App() {
         height: "100%",
       }}
     >
-      <div>{flows}</div>
+      <div>{current}</div>
       <input
         value={state.id}
         onChange={(e) => send("setId", e.target.value)}
