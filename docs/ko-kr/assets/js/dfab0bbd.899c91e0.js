@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[6814],{9288:t=>{t.exports=JSON.parse('{"title":"Getting Started","slug":"/category/getting-started","permalink":"/ko-kr/docs/category/getting-started","navigation":{"next":{"title":"SAIGE VISION Developer \uac1c\uc694","permalink":"/ko-kr/docs/getting_started/summary"}}}')}}]);
