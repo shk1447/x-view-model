@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Quick Start </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Quick Start ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../getting_started/index.html" title="시작하기">시작하기</a>
+                      </li>
+                      <li>
+                          <a href="../development_guide/index.html" title="개발가이드">개발가이드</a>
+                      </li>
+                      <li>
+                          <a href="../api_reference/SaigeVision.Net.Core.V2.html" title="API 레퍼런스">API 레퍼런스</a>
+                      </li>
+                      <li>
+                          <a href="../release_notes/index.html" title="릴리즈 노트">릴리즈 노트</a>
+                      </li>
+                </ul>            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+
+                  <ul class="nav level1">
+                    <li class="active">
+                      <a href="index.html" title="Quick Start" class="active">Quick Start</a>
+                    </li>
+                    <li class="">
+                      <a href="classification.html" title="Classification" class="">Classification</a>
+                    </li>
+                    <li class="">
+                      <a href="detection.html" title="Detection" class="">Detection</a>
+                    </li>
+                    <li class="">
+                      <a href="segmentation.html" title="Segmentation" class="">Segmentation</a>
+                    </li>
+                    <li class="">
+                      <a href="iad.html" title="IAD (Image Anomaly Detection)" class="">IAD (Image Anomaly Detection)</a>
+                    </li>
+                    <li class="">
+                      <a href="ocr.html" title="OCR" class="">OCR</a>
+                    </li>
+                    <li class="">
+                      <a href="ien.html" title="IEN (Image Enhancement)" class="">IEN (Image Enhancement)</a>
+                    </li>
+                  </ul>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="quick-start">Quick Start</h1>
+
+<br>
+<p><strong>아래 코드 블럭은 간단하게 IAD(Image Anomaly Detection) 검사 진행 방법에 대해서 설명합니다.</strong></p>
+<pre><code class="lang-java">    {
+        // Prepare
+        SrImage srImage = new SrImage(@&quot;..\..\sample.png&quot;);
+        string modelPath = @&quot;..\..\model.saigeiad&quot;;
+        int gpuIndex = 0;
+
+        // Initialize
+        using (var engine = new IADEngine(modelPath, gpuIndex))
+        {
+            // Model Info
+            ModelInfo model = engine.GetModelInfo();
+
+            // Option
+            IADOption option = engine.GetInferenceOption();
+            engine.SetInferenceOption(option);
+
+            // Inspection &amp; Get Result
+            IADResult result = eengine.Inspection(srImage);
+        }
+
+        // optional
+        srImage.Dispose();
+    }
+</code></pre>
+<p>위와 같은 간단한 코드로 <code>SaigeVision.Net.V2</code>에서 제공하는 검사 기능을 수행할 수 있습니다.</p>
+<p><code>Workspace</code>에서 정상적으로 <code>SaigeVision.Net.V2</code>, <code>SaigeVision.Net.Core.V2</code>를 참조했다면, 위 샘플 코드를 'Copy &amp; paste' 하여 동작 시켜 보세요.</p>
+<p>샘플 코드에 보이듯이 <code>SaigeVision</code>에서 제공하는 'Inference'의 사용은 몇가지 규칙적인 절차를 가지고 있습니다.</p>
+<p>해당하는 절차와 각 절차의 설명은 아래와 같습니다.</p>
+<ul>
+<li><i>Prepare</i>: 검사에 필요한 데이터와 환경을 준비합니다.</li>
+<li><i>Initialize</i>: <code>모델파일</code>과 <code>GPU</code> 선택 후 InspectionEngine을 로드합니다.</li>
+<li><i>Model Info</i>: 학습한 모델의 정보를 확인할 수 있습니다.</li>
+<li><i>Option</i>: 검사에 필요한 값을 읽고 쓸 수 있습니다.</li>
+<li><i>Inspection</i>: 검사를 수행합니다.</li>
+<li><i>Result</i>: 검사 결과를 가져옵니다.</li>
+</ul>
+<br>
+<p><code>InspectionEngine</code>은 <code>IADEngine</code>, <code>SegmentationEngine</code> 등 모델을 사용할때 포괄하여 통칭하는 단어입니다.</p>
+<p>이 단계에서는 검사 결과 외에도 <code>SaigeVision.Net.V2</code> 를 통해 'Inference'를 수행하는 전체적인 흐름을 이해하는 것이 중요합니다.</p>
+<p>모든 <code>InspectionEngine</code> 검사를 위해서는 이러한 절차를 공통적으로 사용합니다.</p>
+<p>각 <code>InspectionEngine</code>에 대한 세부적인 내용과 가이드를 이 Docs에서 확안하세요.</p>
+<p><code>InspectionOption</code>과 <code>InspectionResult</code> 만이 엔진별로 별도로 사용합니다. 이 외 대부분의 코드는 공통 사용 영역입니다.</p>
+<br>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><b><code>SaigeVision</code>에서 사용하는 모든 기능에는 라이센스 검사가 적용되어 있습니다. <br>
+사용하기 전에 꼭 라이센스를 위한 준비가 되었는지 확인하세요.</b></p>
+</div>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=docs/development_guide/index.md&amp;version=GBmaster&amp;line=1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

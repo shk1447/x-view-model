@@ -1,0 +1,688 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class SegmentationEngine
+ </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class SegmentationEngine
+ ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../getting_started/index.html" title="시작하기">시작하기</a>
+                      </li>
+                      <li>
+                          <a href="../development_guide/index.html" title="개발가이드">개발가이드</a>
+                      </li>
+                      <li>
+                          <a href="../api_reference/SaigeVision.Net.Core.V2.html" title="API 레퍼런스">API 레퍼런스</a>
+                      </li>
+                      <li>
+                          <a href="../release_notes/index.html" title="릴리즈 노트">릴리즈 노트</a>
+                      </li>
+                </ul>            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+
+                  <ul class="nav level1">
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.Core.V2.html" title="SaigeVision.Net.Core.V2" class="">SaigeVision.Net.Core.V2</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.Constants.html" title="Constants" class="">Constants</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.NativeMethod.html" title="NativeMethod" class="">NativeMethod</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.NativeValidation.html" title="NativeValidation" class="">NativeValidation</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.ResponseCode.html" title="ResponseCode" class="">ResponseCode</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeDetectedObject.html" title="SaigeDetectedObject" class="">SaigeDetectedObject</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeEllipse.html" title="SaigeEllipse" class="">SaigeEllipse</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeHandleConfig.html" title="SaigeHandleConfig" class="">SaigeHandleConfig</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeInferenceOption.html" title="SaigeInferenceOption" class="">SaigeInferenceOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeKeyInfoDict.html" title="SaigeKeyInfoDict" class="">SaigeKeyInfoDict</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeModelInfo.html" title="SaigeModelInfo" class="">SaigeModelInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeOCRTextBox.html" title="SaigeOCRTextBox" class="">SaigeOCRTextBox</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeRoiInfo.html" title="SaigeRoiInfo" class="">SaigeRoiInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeRotatedBox.html" title="SaigeRotatedBox" class="">SaigeRotatedBox</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeSegmentedObject.html" title="SaigeSegmentedObject" class="">SaigeSegmentedObject</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeTextFormatting.html" title="SaigeTextFormatting" class="">SaigeTextFormatting</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.Core.V2.SaigeTextObject.html" title="SaigeTextObject" class="">SaigeTextObject</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.html" title="SaigeVision.Net.V2" class="">SaigeVision.Net.V2</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.BitmapExtension.html" title="BitmapExtension" class="">BitmapExtension</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ClassInfo.html" title="ClassInfo" class="">ClassInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ClassScoreInfo.html" title="ClassScoreInfo" class="">ClassScoreInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Contour.html" title="Contour" class="">Contour</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.DetectedObject.html" title="DetectedObject" class="">DetectedObject</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Ellipse.html" title="Ellipse" class="">Ellipse</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.EngineTypeFlags.html" title="EngineTypeFlags" class="">EngineTypeFlags</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IInspectionEngine-2.html" title="IInspectionEngine&lt;TOption, UResult&gt;" class="">IInspectionEngine&lt;TOption, UResult&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IInspectionOption.html" title="IInspectionOption" class="">IInspectionOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IInspectionResult.html" title="IInspectionResult" class="">IInspectionResult</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ImageDataRawFlag.html" title="ImageDataRawFlag" class="">ImageDataRawFlag</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ImageTypeFlags.html" title="ImageTypeFlags" class="">ImageTypeFlags</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.InferenceTimeInfo.html" title="InferenceTimeInfo" class="">InferenceTimeInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.InspectionEngine-2.html" title="InspectionEngine&lt;TOption, UResult&gt;" class="">InspectionEngine&lt;TOption, UResult&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.InspectionOption.html" title="InspectionOption" class="">InspectionOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.InspectionResult.html" title="InspectionResult" class="">InspectionResult</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ModelInfo.html" title="ModelInfo" class="">ModelInfo</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OptionFlags.html" title="OptionFlags" class="">OptionFlags</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OverSizeImage.html" title="OverSizeImage" class="">OverSizeImage</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OverSizeImageFlags.html" title="OverSizeImageFlags" class="">OverSizeImageFlags</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.RotatedBox.html" title="RotatedBox" class="">RotatedBox</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.ScoreValues-1.html" title="ScoreValues&lt;T&gt;" class="">ScoreValues&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.SegmentedObject.html" title="SegmentedObject" class="">SegmentedObject</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.SrImage.html" title="SrImage" class="">SrImage</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.TextFormatting.html" title="TextFormatting" class="">TextFormatting</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.TextObject.html" title="TextObject" class="">TextObject</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.Classification.html" title="SaigeVision.Net.V2.Classification" class="">SaigeVision.Net.V2.Classification</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Classification.ClassificationEngine.html" title="ClassificationEngine" class="">ClassificationEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Classification.ClassificationOption.html" title="ClassificationOption" class="">ClassificationOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Classification.ClassificationResult.html" title="ClassificationResult" class="">ClassificationResult</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.Detection.html" title="SaigeVision.Net.V2.Detection" class="">SaigeVision.Net.V2.Detection</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Detection.DetectionEngine.html" title="DetectionEngine" class="">DetectionEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Detection.DetectionOption.html" title="DetectionOption" class="">DetectionOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Detection.DetectionResult.html" title="DetectionResult" class="">DetectionResult</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.IAD.html" title="SaigeVision.Net.V2.IAD" class="">SaigeVision.Net.V2.IAD</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IAD.IADEngine.html" title="IADEngine" class="">IADEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IAD.IADOption.html" title="IADOption" class="">IADOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IAD.IADResult.html" title="IADResult" class="">IADResult</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.IEN.html" title="SaigeVision.Net.V2.IEN" class="">SaigeVision.Net.V2.IEN</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IEN.IENEngine.html" title="IENEngine" class="">IENEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IEN.IENOption.html" title="IENOption" class="">IENOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.IEN.IENResult.html" title="IENResult" class="">IENResult</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.OCR.html" title="SaigeVision.Net.V2.OCR" class="">SaigeVision.Net.V2.OCR</a>
+
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OCR.OCREngine.html" title="OCREngine" class="">OCREngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OCR.OCROption.html" title="OCROption" class="">OCROption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.OCR.OCRResult.html" title="OCRResult" class="">OCRResult</a>
+                          </li>
+                        </ul>                    </li>
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="SaigeVision.Net.V2.Segmentation.html" title="SaigeVision.Net.V2.Segmentation" class="">SaigeVision.Net.V2.Segmentation</a>
+
+                        <ul class="nav level2">
+                          <li class="active">
+                            <a href="SaigeVision.Net.V2.Segmentation.SegmentationEngine.html" title="SegmentationEngine" class="active">SegmentationEngine</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html" title="SegmentationOption" class="">SegmentationOption</a>
+                          </li>
+                          <li class="">
+                            <a href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html" title="SegmentationResult" class="">SegmentationResult</a>
+                          </li>
+                        </ul>                    </li>
+                  </ul>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine">
+
+
+  <h1 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine" class="text-break">Class SegmentationEngine
+</h1>
+  <div class="markdown level0 summary"><p>Segmentation을 수행할 수 있는 Engine입니다</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">object</span></div>
+    <div class="level1"><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;<a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a>, <a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a>&gt;</div>
+    <div class="level2"><span class="xref">SegmentationEngine</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SaigeVision.Net.V2.IInspectionEngine-2.html">IInspectionEngine</a>&lt;<a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a>, <a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a>&gt;</div>
+    <div><span class="xref">IDisposable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_GetInferenceOption">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.GetInferenceOption()</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_SetInferenceOption__0_System_Boolean_">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.SetInferenceOption(SegmentationOption, bool)</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_GetResult">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.GetResult()</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_GetResults">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.GetResults()</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_Results">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.Results</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_GetModelInfo">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.GetModelInfo()</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_GetModuleVersion">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.GetModuleVersion()</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_Inspection_SaigeVision_Net_V2_SrImage_">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.Inspection(SrImage)</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_Inspection_SaigeVision_Net_V2_SrImage___">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.Inspection(SrImage[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_InspectionAsync_SaigeVision_Net_V2_SrImage_">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.InspectionAsync(SrImage)</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_InspectionAsync_SaigeVision_Net_V2_SrImage___">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.InspectionAsync(SrImage[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html#SaigeVision_Net_V2_InspectionEngine_2_Dispose">InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;.Dispose()</a>
+    </div>
+    <div>
+      <span class="xref">object.Equals(object)</span>
+    </div>
+    <div>
+      <span class="xref">object.Equals(object, object)</span>
+    </div>
+    <div>
+      <span class="xref">object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">object.ReferenceEquals(object, object)</span>
+    </div>
+    <div>
+      <span class="xref">object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <span class="xref">SaigeVision</span>.<span class="xref">Net</span>.<a class="xref" href="SaigeVision.Net.V2.html">V2</a>.<a class="xref" href="SaigeVision.Net.V2.Segmentation.html">Segmentation</a></h6>
+  <h6><strong>Assembly</strong>: SaigeVision.Net.V2.dll</h6>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class SegmentationEngine : InspectionEngine&lt;SegmentationOption, SegmentationResult&gt;, IInspectionEngine&lt;SegmentationOption, SegmentationResult&gt;, IDisposable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+</h3>
+
+  <span class="small pull-right mobile-hide">
+    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=25">View Source</a>
+  </span>
+  <a id="SaigeVision_Net_V2_Segmentation_SegmentationEngine__ctor_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.#ctor*"></a>
+  <h4 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine__ctor_System_String_System_Int32_System_Int32_System_Boolean_System_Nullable_System_Drawing_Size__" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.#ctor(System.String,System.Int32,System.Int32,System.Boolean,System.Nullable{System.Drawing.Size})">SegmentationEngine(string, int, int, bool, Size?)</h4>
+  <div class="markdown level1 summary"><p>생성자입니다</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SegmentationEngine(string model, int gpuNumber, int batchSize = 1, bool useOptimize = false, Size? size = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">string</span></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>.saigeseg 모델파일의 경로</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">gpuNumber</span></td>
+        <td><p>추론에 사용할 장치의 인덱스</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">batchSize</span></td>
+        <td><p>추론을 한 번 수행할 때 몇 개의 이미지를 동시에 추론할지 설정</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">bool</span></td>
+        <td><span class="parametername">useOptimize</span></td>
+        <td><p>최적화 적용하는 플래그.  추론 최적화를 적용하면 추론 시간이 단축되지만, 추론 결과가 약간 달라질 수 있습니다.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Size</span>?</td>
+        <td><span class="parametername">size</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine__ctor_System_String_System_Int32_System_Int32_System_Boolean_System_Nullable_System_Drawing_Size___seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+  <h3 id="methods">Methods
+</h3>
+
+  <span class="small pull-right mobile-hide">
+    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=34">View Source</a>
+  </span>
+  <a id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetInferenceOption_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetInferenceOption*"></a>
+  <h4 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetInferenceOption" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetInferenceOption">GetInferenceOption()</h4>
+  <div class="markdown level1 summary"><p>검사에 필요한 옵션값을 가져옵니다</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override SegmentationOption GetInferenceOption()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></td>
+        <td><p>검사에 필요한 옵션값</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">SaigeVision.Net.V2.InspectionEngine&lt;SaigeVision.Net.V2.Segmentation.SegmentationOption, SaigeVision.Net.V2.Segmentation.SegmentationResult&gt;.GetInferenceOption()</span></div>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetInferenceOption_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+
+  <span class="small pull-right mobile-hide">
+    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=118">View Source</a>
+  </span>
+  <a id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResult_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetResult*"></a>
+  <h4 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResult" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetResult">GetResult()</h4>
+  <div class="markdown level1 summary"><p>검사 결과를 받아오는 함수</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override SegmentationResult GetResult()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></td>
+        <td><p>검사 결과가 담겨있는 값</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">SaigeVision.Net.V2.InspectionEngine&lt;SaigeVision.Net.V2.Segmentation.SegmentationOption, SaigeVision.Net.V2.Segmentation.SegmentationResult&gt;.GetResult()</span></div>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResult_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+
+  <span class="small pull-right mobile-hide">
+    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=127">View Source</a>
+  </span>
+  <a id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResults_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetResults*"></a>
+  <h4 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResults" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.GetResults">GetResults()</h4>
+  <div class="markdown level1 summary"><p>검사 결과를 받아오는 함수</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override SegmentationResult[] GetResults()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a>[]</td>
+        <td><p>검사 결과가 담겨있는 배열값</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">SaigeVision.Net.V2.InspectionEngine&lt;SaigeVision.Net.V2.Segmentation.SegmentationOption, SaigeVision.Net.V2.Segmentation.SegmentationResult&gt;.GetResults()</span></div>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_GetResults_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+
+  <span class="small pull-right mobile-hide">
+    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=55">View Source</a>
+  </span>
+  <a id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_SetInferenceOption_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.SetInferenceOption*"></a>
+  <h4 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_SetInferenceOption_SaigeVision_Net_V2_Segmentation_SegmentationOption_System_Boolean_" data-uid="SaigeVision.Net.V2.Segmentation.SegmentationEngine.SetInferenceOption(SaigeVision.Net.V2.Segmentation.SegmentationOption,System.Boolean)">SetInferenceOption(SegmentationOption, bool)</h4>
+  <div class="markdown level1 summary"><p>검사에 필요한 옵션값을 설정합니다</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void SetInferenceOption(SegmentationOption option, bool writeModelFile = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></td>
+        <td><span class="parametername">option</span></td>
+        <td><p>옵션을 설정할 값</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">bool</span></td>
+        <td><span class="parametername">writeModelFile</span></td>
+        <td><p>모델파일에 옵션값을 덮어 씁니다.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">SaigeVision.Net.V2.InspectionEngine&lt;SaigeVision.Net.V2.Segmentation.SegmentationOption, SaigeVision.Net.V2.Segmentation.SegmentationResult&gt;.SetInferenceOption(SaigeVision.Net.V2.Segmentation.SegmentationOption, bool)</span></div>
+  <h5 id="SaigeVision_Net_V2_Segmentation_SegmentationEngine_SetInferenceOption_SaigeVision_Net_V2_Segmentation_SegmentationOption_System_Boolean__seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SaigeVision.Net.V2.IInspectionEngine-2.html">IInspectionEngine&lt;TOption, UResult&gt;</a>
+  </div>
+  <div>
+      <span class="xref">System.IDisposable</span>
+  </div>
+  <h3 id="seealso">See Also</h3>
+  <div class="seealso">
+      <div><a class="xref" href="SaigeVision.Net.V2.InspectionEngine-2.html">InspectionEngine</a>&lt;TOption, UResult&gt;</div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationOption.html">SegmentationOption</a></div>
+      <div><a class="xref" href="SaigeVision.Net.V2.Segmentation.SegmentationResult.html">SegmentationResult</a></div>
+  </div>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://dev.azure.com/SaigeResearch/SaigeVision/_git/SaigeVision.Net.V2?path=SaigeVision.Net.V2/Segmentation/SegmentationEngine.cs&amp;version=GBmaster&amp;line=16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
