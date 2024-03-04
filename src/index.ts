@@ -77,7 +77,6 @@ export const useViewFlow = <T, F>(
   vf: ViewFlow<T, F>,
   keys?: GetDotKeys<T>[]
 ): [
-  [GetDotKeys<F>, (current: PrefixCode<GetDotKeys<F>>) => void],
   [
     T,
     <K extends GetFunctionKeys<T>>(
@@ -88,7 +87,8 @@ export const useViewFlow = <T, F>(
         callback?: (ret: GetFunctionReturn<T>[K]) => void;
       }
     ) => void
-  ]
+  ],
+  [GetDotKeys<F>, (current: PrefixCode<GetDotKeys<F>>) => void]
 ] => {
   const [state, send] = useViewModel(vf, keys);
   const [current, setCurrent] = useState<GetDotKeys<F>>();
@@ -105,8 +105,8 @@ export const useViewFlow = <T, F>(
   }, []);
 
   return [
-    [current, vf.flow.send],
     [state, send],
+    [current, vf.flow.send],
   ];
 };
 

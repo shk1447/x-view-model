@@ -26,22 +26,8 @@ const config: Config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: "en",
-    locales: ["en", "ko-kr", "zh"],
-    // localeConfigs: {
-    //   en: {
-    //     label: 'English',
-    //     direction: 'ltr',
-    //   },
-    //   'ko-kr': {
-    //     label: '한국어',
-    //     direction: 'ltr',
-    //   },
-    //   zh: {
-    //     label: '중국어',
-    //     direction: 'ltr',
-    //   },
-    // },
+    defaultLocale: "ko-kr",
+    locales: ["ko-kr", "en"],
   },
   markdown: {
     mermaid: true,
@@ -93,14 +79,15 @@ const config: Config = {
       logo: {
         alt: "My Site Logo",
         src: "img/logo.svg",
+        href: "/docs/category/introduction",
       },
       items: [
-        {
-          type: "doc",
-          position: "left",
-          docId: "/category/getting-started",
-          label: "Docs",
-        },
+        // {
+        //   type: "doc",
+        //   position: "left",
+        //   docId: "/category/getting-started",
+        //   label: "Docs",
+        // },
         // {
         //   to: '/manual/', // To highlight the navbar item, you must link to a document, not a top-level directory
         //   position: 'left',
@@ -124,55 +111,50 @@ const config: Config = {
           type: "localeDropdown",
           position: "right",
         },
-        {
-          href: "https://www.npmjs.com/package/x-view-model",
-          label: "Npm Package",
-          position: "right",
-        },
       ],
     },
     footer: {
       style: "dark",
       links: [
-        // {
-        //   title: 'Docs',
-        //   items: [
-        //     {
-        //       label: 'Tutorial',
-        //       to: '/docs/intro',
-        //     },
-        //   ],
-        // },
-        // {
-        //   title: 'Community',
-        //   items: [
-        //     {
-        //       label: 'Stack Overflow',
-        //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-        //     },
-        //     {
-        //       label: 'Discord',
-        //       href: 'https://discordapp.com/invite/docusaurus',
-        //     },
-        //     {
-        //       label: 'Twitter',
-        //       href: 'https://twitter.com/docusaurus',
-        //     },
-        //   ],
-        // },
-        // {
-        //   title: 'More',
-        //   items: [
-        //     {
-        //       label: 'Blog',
-        //       to: '/blog',
-        //     },
-        //     {
-        //       label: 'GitHub',
-        //       href: 'https://github.com/facebook/docusaurus',
-        //     },
-        //   ],
-        // },
+        {
+          title: "Learn",
+          items: [
+            {
+              label: "Introduction",
+              to: "/docs/introduction/summary",
+            },
+            {
+              label: "Getting Started",
+              to: "/docs/guides/getting_started",
+            },
+            {
+              label: "Create CLI",
+              to: "/docs/cli/create",
+            },
+            {
+              label: "Counter Example",
+              to: "/docs/examples/counter",
+            },
+          ],
+        },
+
+        {
+          title: "More",
+          items: [
+            {
+              label: "Npm",
+              href: "https://www.npmjs.com/package/x-view-model",
+            },
+            {
+              label: "GitHub",
+              href: "https://github.com/shk1447/x-view-model",
+            },
+            {
+              label: "VS Code Extension",
+              href: "https://github.com/shk1447/x-view-model",
+            },
+          ],
+        },
       ],
       copyright: `Copyright (C) Vases 2024-${new Date().getFullYear()}. All rights reserved.`,
     },

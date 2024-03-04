@@ -1,4 +1,4 @@
-import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 /**
  * Creating a sidebar enables you to:
@@ -14,49 +14,36 @@ const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   tutorialSidebar: [
     {
-      type: 'category',
-      label: 'Getting Started',
+      type: "category",
+      label: "Introduction",
       link: {
-        type: 'generated-index',
+        type: "generated-index",
       },
-      items: [
-        'getting_started/summary',
-        'getting_started/menu_structure',
-        'getting_started/model_types',
-        'getting_started/quick_guide',
-      ],
+      items: ["introduction/summary", "introduction/quick_guide"],
     },
     {
-      type: 'category',
-      label: 'Datasets',
+      type: "category",
+      label: "Guides",
       link: {
-        type: 'generated-index',
+        type: "generated-index",
       },
-      items: ['datasets/manage_datasets'],
+      items: ["guides/getting_started", "guides/installation"],
     },
     {
-      type: 'category',
-      label: 'Projects',
+      type: "category",
+      label: "Command-Line Interface (CLI)",
       link: {
-        type: 'generated-index',
+        type: "generated-index",
       },
-      items: ['projects/manage_projects'],
+      items: ["cli/create", "cli/visualize", "cli/optimize"],
     },
     {
-      type: 'category',
-      label: 'Training Queue',
+      type: "category",
+      label: "Examples",
       link: {
-        type: 'generated-index',
+        type: "generated-index",
       },
-      items: ['training_queue/manage_training_queue'],
-    },
-    {
-      type: 'category',
-      label: 'Settings',
-      link: {
-        type: 'generated-index',
-      },
-      items: ['settings/manage_metadata'],
+      items: ["examples/counter"],
     },
   ],
 };

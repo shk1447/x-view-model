@@ -3,24 +3,20 @@
     "message": "Next",
     "description": "The label for version current"
   },
-  "sidebar.tutorialSidebar.category.Getting Started": {
-    "message": "Getting Started",
-    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Introduction": {
+    "message": "Introduction",
+    "description": "The label for category Introduction in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Datasets": {
-    "message": "Datasets",
-    "description": "The label for category Datasets in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Guides": {
+    "message": "Guides",
+    "description": "The label for category Guides in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Projects": {
-    "message": "Projects",
-    "description": "The label for category Projects in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Command-Line Interface (CLI)": {
+    "message": "Command-Line Interface (CLI)",
+    "description": "The label for category Command-Line Interface (CLI) in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.Training Queue": {
-    "message": "Training Queue",
-    "description": "The label for category Training Queue in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Settings": {
-    "message": "Settings",
-    "description": "The label for category Settings in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.Examples": {
+    "message": "Examples",
+    "description": "The label for category Examples in sidebar tutorialSidebar"
   }
 }

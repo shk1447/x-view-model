@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "all": "npm run write-translations-all && npm run build && npm run serve",
+    "all": "npm run write-translations-all && npm run build",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
@@ -12,7 +12,7 @@
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
-    "write-translations-all": "docusaurus write-translations --locale en && docusaurus write-translations --locale ko-kr && docusaurus write-translations --locale zh",
+    "write-translations-all": "docusaurus write-translations --locale ko-kr && docusaurus write-translations --locale en",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc"
   },
