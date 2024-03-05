@@ -42,7 +42,7 @@ import { viewModel } from "./viewModel";
 export const Form = () => {
   const [state, send] = useViewModel(viewModel, ["user.name"]);
   const handleChange = (e) => send("setName", e.target.value);
-  return <input value={state.name} onChange={handleChange} />;
+  return <input value={state.user.name} onChange={handleChange} />;
 };
 ```
 

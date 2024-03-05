@@ -70,7 +70,7 @@ const viewFlow = registViewFlow<Context, Flow>(
 );
 
 const Form = () => {
-  const [[state, send], [current, flow]] = useViewFlow(viewFlow, ["user.name"]);
+  const [[state, send], [current, flow]] = useViewFlow(viewFlow, ["name"]);
 
   useEffect(() => {
     if (current == "login.success") {
@@ -86,7 +86,7 @@ const Form = () => {
     <>
       <p>{current}</p>
       <input
-        defaultValue={state.name}
+        value={state.name}
         onChange={(e) => send("setName", e.target.value)}
       />
       <button onClick={() => flow("#login")}>login</button>
