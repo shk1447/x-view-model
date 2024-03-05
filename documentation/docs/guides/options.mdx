@@ -1,0 +1,12 @@
+# Options
+
+## Default Options
+
+```ts
+const vm = registViewModel<Context>({...}, {
+  // nested object일 경우, 안쪽의 데이터가 바뀔경우에도 이벤트가 발생
+  deep: false,
+  // 뷰모델 이름 지정
+  name: 'DataViewModel'
+})
+```

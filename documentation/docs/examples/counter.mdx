@@ -1,3 +1,46 @@
-# Counter
+# Count Action
 
-> 설명
+> ViewModel를 활용한 Counter 예제
+
+```tsx live noInline
+const { registViewModel, useViewModel } = xvm;
+type CounterState = {
+  count: number;
+};
+
+type CounterAction = {
+  increase: (amount: number) => void;
+  decrease: (amount: number) => void;
+};
+const vm = registViewModel<CounterState & CounterAction>({
+  count: 0,
+  increase: function (amount) {
+    this.count += amount;
+  },
+  decrease: function (amount) {
+    this.count -= amount;
+  },
+});
+
+const CountAction = () => {
+  const [state, send] = useViewModel(vm, ["count"]);
+
+  return (
+    <div style={{ display: "flex", gap: "4px" }}>
+      <button onClick={() => send("increase", 1)}>+</button>
+      <button onClick={() => send("decrease", 1)}>-</button>
+    </div>
+  );
+};
+
+const CountText = () => {
+  const [state, send] = useViewModel(vm, ["count"]);
+  return <p>Count {state.count}!</p>;
+};
+render(
+  <>
+    <CountText />
+    <CountAction />
+  </>
+);
+```

@@ -1,3 +1,13 @@
-# Quick Guide
+# Comparison With hooks
 
-> 설명
+> 비즈니스 로직과 화면 렌더코드의 분리
+
+`x-view-model` is mainly used to separate UI and business logic, which can solve some of the problems caused by the official react hooks.
+
+| hooks component issues                                                                                                      | x-view-model                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Usually need to set multiple useStates, can't update property values at fine granularity                                    | Support update and deconstruct data by object form, support update property values at fine granularity |
+| When the component reaches a certain complexity, the code piled up together will become more and more difficult to maintain | UI and logic are well separated, code is well organized                                                |
+| The closure trap problem of React Hook                                                                                      | Since the methods are maintained in the class, there is no such problem                                |
+| there is thinking burden while using useReducer+context to global shared state                                              | an intuitive api and simple to use                                                                     |
+| useState updater can't implement immutable data, even memo wrapped subcomponents will be re-rendered                        | can implement immutable data by state keys, won't re-render subcomponents                              |

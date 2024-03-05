@@ -27,7 +27,13 @@ const sidebars: SidebarsConfig = {
       link: {
         type: "generated-index",
       },
-      items: ["guides/getting_started", "guides/installation"],
+      items: [
+        "guides/installation",
+        "guides/getting_started",
+        "guides/api",
+        "guides/options",
+        "guides/advanced",
+      ],
     },
     {
       type: "category",
@@ -43,7 +49,7 @@ const sidebars: SidebarsConfig = {
       link: {
         type: "generated-index",
       },
-      items: ["examples/counter"],
+      items: ["examples/counter", "examples/login"],
     },
   ],
 };

@@ -1,3 +1,146 @@
 # Getting Started
 
-> 설명
+>
+
+## ViewModel 사용법
+
+---
+
+### ViewModel 등록하기
+
+```ts title="/src/viewModel.ts"
+import { registViewModel } from "x-view-model";
+
+type State = {
+  user: {
+    name: string;
+  };
+};
+
+type Action = {
+  setName: (payload: string) => void;
+};
+
+type Context = State & Action;
+
+export const viewModel = registViewModel<Context>({
+  user: {
+    name: "",
+  },
+  setName: (payload) => {
+    this.user.name = payload;
+  },
+});
+```
+
+### ViewModel 사용하기
+
+```tsx title="/src/view.tsx"
+import React from "react";
+import { viewModel } from "./viewModel";
+
+export const Form = () => {
+  const [state, send] = useViewModel(viewModel, ["user.name"]);
+  const handleChange = (e) => send("setName", e.target.value);
+  return <input value={state.name} onChange={handleChange} />;
+};
+```
+
+## ViewFlow 사용법
+
+### ViewFlow 등록하기
+
+```ts title="/src/viewFlow.ts"
+import { registViewFlow } from "x-view-model";
+
+type State = {
+  name: string;
+};
+
+type Action = {
+  setName: (payload: string) => void;
+};
+
+type Context = State & Action;
+
+type Flow = {
+  login: {
+    success: {};
+    fail: {};
+  };
+  main: {};
+};
+
+export const viewFlow = registViewFlow<Context, Flow>(
+  {
+    name: "",
+    setName: (payload) => {
+      this.name = payload;
+    },
+  },
+  {
+    login: {
+      invoke: async function (context: Context, err: any) {
+        if (!context.name) {
+          throw new Error("");
+        }
+
+        // api 요청 로직
+      },
+      onDone: "#login.success",
+      onError: "#login.fail",
+    },
+
+    "login.success": {
+      invoke: async function (context: Context, err: any) {
+        // 성공 후에 대한 처리
+      },
+      onDone: (context) => {
+        return "#main";
+      },
+      onError: undefined,
+    },
+    "login.fail": {
+      invoke: async function (context: Context, err: any) {
+        // fail에 대한 처리 로직
+        if (!context.name) alert("no named.");
+      },
+      onDone: "#login",
+      onError: undefined,
+    },
+    main: {
+      invoke: async function (context: Context, err: any) {},
+      onDone: undefined,
+      onError: undefined,
+    },
+  }
+);
+```
+
+### ViewFlow 사용하기
+
+```tsx title="/src/view.tsx"
+import React from "react";
+import { viewFlow } from "./viewFlow";
+
+export const Form = () => {
+  const [[state, send], [current, flow]] = useViewFlow(viewFlow, ["user.name"]);
+  const handleChange = (e) => send("setName", e.target.value);
+
+  useEffect(() => {
+    if (current == "login.success") {
+      // 로그인 성공시
+    } else if (current == "login.fail") {
+      // 로그인 실패시
+    } else if (current == "main") {
+      // 로그인 성공후 메인으로 접근시
+    }
+  }, [current]);
+  return (
+    <>
+      <input value={state.name} onChange={handleChange} />
+      <button onClick={() => flow("#login")}>login</button>
+    </>
+  );
+};
+```

@@ -300,5 +300,13 @@
   "theme.unlistedContent.message": {
     "message": "This page is unlisted. Search engines will not index it, and only users having a direct link can access it.",
     "description": "The unlisted content banner message"
+  },
+  "theme.Playground.result": {
+    "message": "결과",
+    "description": "The result label of the live codeblocks"
+  },
+  "theme.Playground.liveEditor": {
+    "message": "라이브 에디터",
+    "description": "The live editor label of the live codeblocks"
   }
 }
