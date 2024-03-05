@@ -23,7 +23,7 @@ Using `x-view-model` will bring a lot of convenience as follows:
 
 ## Document
 
-[X-VIEW-MODEL 문서] (https://shk1447.github.io/x-view-model/docs/introduction/summary)
+[X-VIEW-MODEL 문서](https://shk1447.github.io/x-view-model/docs/introduction/summary)
 
 ## Furture Feature
 
