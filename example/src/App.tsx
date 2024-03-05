@@ -59,7 +59,7 @@ const AppViewFlow = registViewFlow<UserContext, UserFlow>(
 );
 
 function App() {
-  const [[current, flow], [state, send]] = useViewFlow(AppViewFlow, ["id"]);
+  const [[state, send], [current, flow]] = useViewFlow(AppViewFlow, ["id"]);
   useMemo(() => {
     flow("#ready");
   }, []);
