@@ -124,18 +124,12 @@ import React from "react";
 import { viewFlow } from "./viewFlow";
 
 export const Form = () => {
-  const [[state, send], [current, flow]] = useViewFlow(viewFlow, ["user.name"]);
+  const [state, send, flow] = useViewFlow(viewFlow, ["user.name"]);
   const handleChange = (e) => send("setName", e.target.value);
 
   useEffect(() => {
-    if (current == "login.success") {
-      // 로그인 성공시
-    } else if (current == "login.fail") {
-      // 로그인 실패시
-    } else if (current == "main") {
-      // 로그인 성공후 메인으로 접근시
-    }
-  }, [current]);
+    // flow에 따른 정의된 state가 변화
+  }, [state]);
   return (
     <>
       <input value={state.name} onChange={handleChange} />

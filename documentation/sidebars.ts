@@ -49,7 +49,7 @@ const sidebars: SidebarsConfig = {
       link: {
         type: "generated-index",
       },
-      items: ["examples/counter", "examples/login"],
+      items: ["examples/counter", "examples/signal_light"],
     },
   ],
 };

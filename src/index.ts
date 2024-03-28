@@ -30,16 +30,23 @@ export type ViewFlow<T, F> = ViewModel<T> & {
 export type PrefixCode<T> = T extends string ? `#${T}` : never;
 
 export type FlowDecision<T, F> = {
-  invoke: (context: PropertyHandler<T>["state"], err?: any) => void;
+  invoke: (
+    context: PropertyHandler<T>["state"],
+    prev?: PrefixCode<GetDotKeys<F>>,
+    err?: any
+  ) => void;
   onDone?:
     | PrefixCode<GetDotKeys<F>>
     | ((
-        context: PropertyHandler<T>["state"]
+        context: PropertyHandler<T>["state"],
+        prev?: PrefixCode<GetDotKeys<F>>,
+        err?: any
       ) => PrefixCode<GetDotKeys<F>> | undefined);
   onError?:
     | PrefixCode<GetDotKeys<F>>
     | ((
         context: PropertyHandler<T>["state"],
+        prev?: PrefixCode<GetDotKeys<F>>,
         err?: any
       ) => PrefixCode<GetDotKeys<F>> | undefined);
 };
@@ -77,37 +84,20 @@ export const useViewFlow = <T, F>(
   vf: ViewFlow<T, F>,
   keys?: GetDotKeys<T>[]
 ): [
-  [
-    T,
-    <K extends GetFunctionKeys<T>>(
-      name: K,
-      payload: GetFunctionParams<T>[K],
-      options?: {
-        sync: boolean;
-        callback?: (ret: GetFunctionReturn<T>[K]) => void;
-      }
-    ) => void
-  ],
-  [GetDotKeys<F>, (current: PrefixCode<GetDotKeys<F>>) => void]
+  T,
+  <K extends GetFunctionKeys<T>>(
+    name: K,
+    payload: GetFunctionParams<T>[K],
+    options?: {
+      sync: boolean;
+      callback?: (ret: GetFunctionReturn<T>[K]) => void;
+    }
+  ) => void,
+  (current: PrefixCode<GetDotKeys<F>>) => void
 ] => {
   const [state, send] = useViewModel(vf, keys);
-  const [current, setCurrent] = useState<GetDotKeys<F>>();
 
-  useMemo(() => {
-    const update = (val) => {
-      setCurrent(val);
-    };
-    vf.flow.onChangeCurrent(update);
-
-    return () => {
-      vf.flow.offChangeCurrent(update);
-    };
-  }, []);
-
-  return [
-    [state, send],
-    [current, vf.flow.send],
-  ];
+  return [state, send, vf.flow.send];
 };
 
 export const useViewModel = <T>(
