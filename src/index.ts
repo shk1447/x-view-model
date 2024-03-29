@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
 import { FlowHanlder } from "./core/handler/FlowHandler";
-import { NameSpacesHandler } from "./core/handler/NameSpacesHandler";
 import {
   PropertyHandler,
   PropertyHandlerOptions,
@@ -30,11 +28,17 @@ export type ViewFlow<T, F> = ViewModel<T> & {
 export type PrefixCode<T> = T extends string ? `#${T}` : never;
 
 export type FlowDecision<T, F> = {
-  invoke: (context: PropertyHandler<T>["state"], err?: any) => void;
+  invoke: (
+    context: PropertyHandler<T>["state"],
+    prev?: PrefixCode<GetDotKeys<F>>,
+    err?: any
+  ) => void;
   onDone?:
     | PrefixCode<GetDotKeys<F>>
     | ((
-        context: PropertyHandler<T>["state"]
+        context: PropertyHandler<T>["state"],
+        prev?: PrefixCode<GetDotKeys<F>>,
+        err?: any
       ) =>
         | Promise<PrefixCode<GetDotKeys<F>>>
         | PrefixCode<GetDotKeys<F>>
@@ -43,6 +47,7 @@ export type FlowDecision<T, F> = {
     | PrefixCode<GetDotKeys<F>>
     | ((
         context: PropertyHandler<T>["state"],
+        prev?: PrefixCode<GetDotKeys<F>>,
         err?: any
       ) =>
         | Promise<PrefixCode<GetDotKeys<F>>>

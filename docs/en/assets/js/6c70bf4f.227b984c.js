@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[4472],{6428:e=>{e.exports=JSON.parse('{"title":"Introduction","slug":"/category/introduction","permalink":"/x-view-model/en/docs/category/introduction","navigation":{"next":{"title":"What is x-view-model?","permalink":"/x-view-model/en/docs/introduction/summary"}}}')}}]);

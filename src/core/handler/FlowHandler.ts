@@ -6,10 +6,10 @@ import { EventHandler } from "./EventHandler";
 import { PropertyHandler } from "./PropertyHandler";
 
 export class FlowHanlder<F, T> extends EventHandler<F> {
-  _flow: Record<GetDotKeys<F>, FlowDecision<T, F>>;
-  _handler: PropertyHandler<T>;
-  _current: GetDotKeys<F>;
-  _fns: Function[];
+  private _flow: Record<GetDotKeys<F>, FlowDecision<T, F>>;
+  private _handler: PropertyHandler<T>;
+  private _current: GetDotKeys<F>;
+  private _fns: ((current: GetDotKeys<F>) => void)[];
 
   constructor(
     flow: Record<GetDotKeys<F>, FlowDecision<T, F>>,
@@ -21,38 +21,42 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
     this._fns = [];
   }
 
-  get current() {
+  private get current() {
     return this._current;
   }
 
-  set current(val) {
+  private set current(val) {
     this._current = val;
     this._fns.forEach((d) => {
       d(val);
     });
   }
 
-  public onChangeCurrent = (fn) => {
+  public onCurrentChange = (fn: (current: GetDotKeys<F>) => void) => {
     this._fns.push(fn);
   };
 
-  public offChangeCurrent = (fn) => {
+  public offCurrentChange = (fn: (current: GetDotKeys<F>) => void) => {
     this._fns.splice(this._fns.indexOf(fn), 1);
   };
 
-  send = async (target: PrefixCode<GetDotKeys<F>>, err?: any) => {
+  public send = async (
+    target: PrefixCode<GetDotKeys<F>>,
+    prev?: PrefixCode<GetDotKeys<F>>,
+    err?: any
+  ) => {
     const pick = this._flow[target.replace("#", "")] as FlowDecision<T, F>;
     if (pick) {
       try {
-        await pick.invoke(this._handler.state, err);
+        await pick.invoke(this._handler.state, prev, err);
         this.current = target.replace("#", "") as GetDotKeys<F>;
         if (pick.onDone) {
           if (typeof pick.onDone == "string") {
             await this.send(pick.onDone);
           } else {
-            target = await pick.onDone(this._handler.state);
-            if (target) {
-              await this.send(target);
+            const _target = await pick.onDone(this._handler.state, prev, err);
+            if (_target) {
+              await this.send(_target, target);
             }
           }
         }
@@ -61,9 +65,9 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
           if (typeof pick.onError == "string") {
             await this.send(pick.onError, error);
           } else {
-            target = await pick.onError(this._handler.state, err);
-            if (target) {
-              await this.send(target, error);
+            const _target = await pick.onError(this._handler.state, prev, err);
+            if (_target) {
+              await this.send(_target, prev, error);
             }
           }
         }

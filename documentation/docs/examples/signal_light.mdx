@@ -1,0 +1,131 @@
+# 신호등 흐름 예시
+
+> 신호등 흐름에 따라 사람의 행동을 상태로 관리하는 예제
+
+```tsx live noInline
+const { useViewFlow, registViewFlow } = xvm;
+
+type State = {
+  flow?: string;
+  // 빨간 신호가 유지하는 시간 ms
+  redInterval: number;
+  // 초록 신호가 유지하는 시간 ms
+  greenInterval: number;
+  // 노란 신호가 유지하는 시간 ms
+  yellowInterval: number;
+  // 사람의 행동
+  personBehavior: "walk" | "stop" | "run" | "ready";
+};
+
+type Action = {
+  // 신호의 시간을 변경하는 액션
+  setIntervalForSignals: (payload: {
+    redInterval: number;
+    greenInterval: number;
+    yellowInterval: number;
+  }) => void;
+  // 사람의 행동을 변경하는 액션
+  setPersonBehavior: (payload: State["personBehavior"]) => void;
+};
+
+type Context = State & Action;
+
+type Flow = {
+  red: {};
+  yellow: {};
+  green: {};
+  break: {};
+};
+
+const viewFlow = registViewFlow<Context, Flow>(
+  {
+    personBehavior: "stop",
+    redInterval: 5000,
+    greenInterval: 5000,
+    yellowInterval: 2000,
+    setIntervalForSignals(payload) {
+      this.redInterval = payload.redInterval;
+      this.greenInterval = payload.greenInterval;
+      this.yellowInterval = payload.yellowInterval;
+    },
+    setPersonBehavior(payload) {
+      this.personBehavior = payload;
+    },
+  },
+  {
+    red: {
+      invoke: async function (context: Context, prev, err: any) {
+        context.flow = "red";
+        context.setPersonBehavior("stop");
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, context.redInterval);
+        });
+      },
+      onDone(context) {
+        return "#yellow";
+      },
+      onError: "#break",
+    },
+
+    yellow: {
+      invoke: async function (context: Context, prev, err: any) {
+        context.flow = "yellow";
+        if (prev == "#red") context.setPersonBehavior("ready");
+        else context.setPersonBehavior("run");
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, context.yellowInterval);
+        });
+      },
+      onDone(context, prev) {
+        return prev == "#red" ? "#green" : "#red";
+      },
+      onError: "#break",
+    },
+    green: {
+      invoke: async function (context: Context, prev, err: any) {
+        context.flow = "green";
+        context.setPersonBehavior("walk");
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, context.greenInterval);
+        });
+      },
+      onDone(context) {
+        return "#yellow";
+      },
+      onError: "#break",
+    },
+    break: {
+      invoke: async function (context: Context, err: any) {
+        // fail에 대한 처리 로직
+        alert("신호등이 고장났습니다!!!");
+      },
+    },
+  },
+  { deep: true, name: "SignalLightViewFlow" }
+);
+
+const Form = () => {
+  const [state, send, flow] = useViewFlow(viewFlow, ["personBehavior", "flow"]);
+
+  return (
+    <>
+      <p>signal : {state.flow}</p>
+      <p>person : {state.personBehavior}</p>
+
+      <button onClick={() => flow("#red")}>신호등 시작</button>
+    </>
+  );
+};
+
+render(
+  <>
+    <Form />
+  </>
+);
+```
