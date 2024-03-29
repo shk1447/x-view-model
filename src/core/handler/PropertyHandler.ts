@@ -1,5 +1,10 @@
 import { Change, ObjectObserver, Observable } from "../observer";
-import { GetDotKeys } from "../types";
+import {
+  GetDotKeys,
+  GetFunctionKeys,
+  GetFunctionParams,
+  GetFunctionReturn,
+} from "../types";
 import { EventHandler } from "./EventHandler";
 import { NameSpacesHandler } from "./NameSpacesHandler";
 import { ServiceHandler } from "./ServiceHandler";
@@ -25,7 +30,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._property = init_property;
     this._options = options;
     this._reference = 0;
-    this._observable = Observable.from({ ...this._property }, {async:true});
+    this._observable = Observable.from({ ...this._property }, { async: true });
     this._started = false;
     this.services = new ServiceHandler<R>(this);
     this.namespaces = NameSpacesHandler.getInstance();
@@ -113,5 +118,31 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     Observable.unobserve(this._observable);
     this._observable = Observable.from({ ...this._property });
     Observable.observe(this._observable, this.watch);
+  }
+
+  public async send<K extends GetFunctionKeys<R>>(
+    name: K,
+    payload: GetFunctionParams<R>[K],
+    options?: {
+      sync: boolean;
+      callback: (ret: GetFunctionReturn<R>[K]) => void;
+    }
+  ) {
+    if (options && options.sync) {
+      try {
+        const res = await (this.property[name] as any).apply(this.state, [
+          payload,
+        ]);
+        if (options.callback) {
+          options.callback(res);
+        }
+        return true;
+      } catch (error) {
+        return false;
+      }
+    } else {
+      this.services.emit(name, [payload]);
+      return false;
+    }
   }
 }

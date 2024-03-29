@@ -67,7 +67,9 @@ export class FlowHanlder<F, T> extends EventHandler<F> {
             }
           }
         }
+        return false;
       }
     }
+    return true;
   };
 }
