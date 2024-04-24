@@ -17,11 +17,12 @@ export type DataModel<T> = T extends (
   ? Response
   : never;
 
-export type ViewModel<T> = {
+export type ViewModel<T, R> = {
   context: PropertyHandler<T>;
+  ref: R;
 };
 
-export type ViewFlow<T, F> = ViewModel<T> & {
+export type ViewFlow<T, F, R> = ViewModel<T, R> & {
   flow: FlowHanlder<F, T>;
 };
 
@@ -55,37 +56,41 @@ export type FlowDecision<T, F> = {
         | undefined);
 };
 
-export const registViewFlow = <T, F>(
+export const registViewFlow = <T, F, R = unknown>(
   data: T,
   flow: Record<GetDotKeys<F>, FlowDecision<T, F>>,
-  options?: PropertyHandlerOptions
-): ViewFlow<T, F> => {
+  options?: PropertyHandlerOptions,
+  ref?: R
+): ViewFlow<T, F, R> => {
   const handler = new PropertyHandler<T>(data, options);
   const fHandler = new FlowHanlder<F, T>(flow, handler);
 
   const vm = {
     context: handler,
     flow: fHandler,
+    ref: ref,
   };
 
   return vm;
 };
 
-export const registViewModel = <T>(
+export const registViewModel = <T, R = unknown>(
   data: T,
-  options?: PropertyHandlerOptions
-): ViewModel<T> => {
+  options?: PropertyHandlerOptions,
+  ref?: R
+): ViewModel<T, R> => {
   const handler = new PropertyHandler<T>(data, options);
 
   const vm = {
     context: handler,
+    ref: ref,
   };
 
   return vm;
 };
 
-export const useViewFlow = <T, F>(
-  vf: ViewFlow<T, F>,
+export const useViewFlow = <T, F, R>(
+  vf: ViewFlow<T, F, R>,
   keys?: GetDotKeys<T>[]
 ): [
   T,
@@ -104,8 +109,8 @@ export const useViewFlow = <T, F>(
   return [state, send, vf.flow.send];
 };
 
-export const useViewModel = <T>(
-  vm: ViewModel<T>,
+export const useViewModel = <T, R>(
+  vm: ViewModel<T, R>,
   keys?: GetDotKeys<T>[]
 ): [
   T,
