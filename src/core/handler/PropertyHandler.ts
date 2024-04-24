@@ -110,12 +110,31 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._started = false;
   }
 
+  private pause() {
+    if (!this._started) return;
+    Observable.unobserve(this._observable);
+  }
+
   public restart() {
     Observable.unobserve(this._observable);
     this._observable = Observable.from({ ...this._property });
     Observable.observe(this._observable, this.watch);
     console.log(this.name, "started");
     this._started = true;
+  }
+
+  public snapshot() {
+    this.pause();
+    const snapshotJson = JSON.stringify(this._observable);
+    this.start();
+    return snapshotJson;
+  }
+
+  public restore(json: string) {
+    this.pause();
+    const restoreObj = JSON.parse(json);
+    this._observable = Observable.from({ ...this._property, ...restoreObj });
+    this.start();
   }
 
   public async send<K extends GetFunctionKeys<R>>(

@@ -102,11 +102,12 @@ export const useViewFlow = <T, F, R>(
       callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
   ) => void,
-  (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>
+  (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>,
+  R
 ] => {
   const [state, send] = useViewModel(vf, keys);
 
-  return [state, send, vf.flow.send];
+  return [state, send, vf.flow.send, vf.ref];
 };
 
 export const useViewModel = <T, R>(
@@ -121,7 +122,8 @@ export const useViewModel = <T, R>(
       sync: boolean;
       callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => void
+  ) => void,
+  R
 ] => {
   const state = useInterfaceHandle(keys, vm.context);
 
@@ -152,5 +154,5 @@ export const useViewModel = <T, R>(
     }
   };
 
-  return [state, send];
+  return [state, send, vm.ref];
 };
