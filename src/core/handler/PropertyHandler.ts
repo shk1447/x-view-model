@@ -130,6 +130,11 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     return snapshotJson;
   }
 
+  public rebase(json: string) {
+    const rebaseObj = JSON.parse(json);
+    this._property = { ...this._property, ...rebaseObj };
+  }
+
   public restore(json: string) {
     this.pause();
     const restoreObj = JSON.parse(json);

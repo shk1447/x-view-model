@@ -28,6 +28,7 @@ export declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private pause;
     restart(): void;
     snapshot(): string;
+    rebase(json: string): void;
     restore(json: string): void;
     send<K extends GetFunctionKeys<R>>(name: K, payload: GetFunctionParams<R>[K], options?: {
         sync: boolean;
