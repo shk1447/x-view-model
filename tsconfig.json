@@ -3,7 +3,7 @@
     "outDir": "./dist",
     "declaration": true,
     "allowJs": true,
-    "target": "ES2017",
+    "target": "ES6",
     "skipLibCheck": true,
     "lib": ["es6", "dom", "dom.iterable", "esnext"],
     "moduleResolution": "node",
