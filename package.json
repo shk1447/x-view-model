@@ -1,14 +1,15 @@
 {
   "name": "x-view-model",
-  "version": "2.2.1",
+  "version": "2.2.5",
   "description": "simple state/flow management",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.esm.js",
+  "types": "lib/index.d.ts",
   "bin": {
     "xvm": "./dist/bin/xvm.js"
   },
   "scripts": {
-    "build": "tsc && webpack"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
+    "rollup": "^2.79.1",
     "@types/commander": "^2.12.2",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.14.202",
@@ -49,6 +51,12 @@
     "@types/react": "^18.0.26",
     "typescript": "^4.9.4",
     "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "rollup-plugin-dts": "^4.2.3",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-typescript2": "^0.32.1"
   }
 }
