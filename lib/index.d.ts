@@ -63,12 +63,12 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private pause;
     restart(): void;
     snapshot(): string;
-    rebase(json: string): void;
-    restore(json: string): void;
+    rebase(json: string | object): void;
+    restore(json: string | object): void;
     send<K extends GetFunctionKeys<R>>(name: K, payload: GetFunctionParams<R>[K], options?: {
         sync: boolean;
         callback: (ret: GetFunctionReturn<R>[K]) => void;
-    }): Promise<boolean>;
+    }): Promise<any>;
 }
 
 declare class FlowHanlder<F, T> extends EventHandler<F> {

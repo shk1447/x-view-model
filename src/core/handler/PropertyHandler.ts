@@ -130,14 +130,14 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     return snapshotJson;
   }
 
-  public rebase(json: string) {
-    const rebaseObj = JSON.parse(json);
+  public rebase(json: string | object) {
+    const rebaseObj = typeof json === "string" ? JSON.parse(json) : json;
     this._property = { ...this._property, ...rebaseObj };
   }
 
-  public restore(json: string) {
+  public restore(json: string | object) {
     this.pause();
-    const restoreObj = JSON.parse(json);
+    const restoreObj = typeof json === "string" ? JSON.parse(json) : json;
     this._observable = Observable.from({ ...this._property, ...restoreObj });
     this.start();
   }
@@ -149,7 +149,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
       sync: boolean;
       callback: (ret: GetFunctionReturn<R>[K]) => void;
     }
-  ) {
+  ): Promise<any> {
     if (options && options.sync) {
       try {
         const res = await (this.property[name] as any).apply(this.state, [
@@ -158,7 +158,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
         if (options.callback) {
           options.callback(res);
         }
-        return true;
+        return res;
       } catch (error) {
         return false;
       }

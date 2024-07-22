@@ -134,7 +134,7 @@ export const useViewModel = <T, R>(
       sync: boolean;
       callback: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => {
+  ): Promise<any> => {
     if (options && options.sync) {
       try {
         const res = await (vm.context.property[name] as any).apply(
@@ -144,7 +144,7 @@ export const useViewModel = <T, R>(
         if (options.callback) {
           options.callback(res);
         }
-        return true;
+        return res;
       } catch (error) {
         return false;
       }
