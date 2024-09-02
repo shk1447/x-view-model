@@ -101,6 +101,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     Observable.observe(this._observable, this.watch);
     console.log(this.name, "started");
     this._started = true;
+    return this;
   }
 
   private stop() {
@@ -108,11 +109,13 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     Observable.unobserve(this._observable);
     this._observable = Observable.from({ ...this._property });
     this._started = false;
+    return this;
   }
 
   private pause() {
     if (!this._started) return;
     Observable.unobserve(this._observable);
+    return this;
   }
 
   public restart() {
@@ -121,6 +124,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     Observable.observe(this._observable, this.watch);
     console.log(this.name, "started");
     this._started = true;
+    return this;
   }
 
   public snapshot() {
@@ -130,16 +134,18 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     return snapshotJson;
   }
 
-  public rebase(json: string | object) {
+  public rebase(json: string | Partial<R>) {
     const rebaseObj = typeof json === "string" ? JSON.parse(json) : json;
     this._property = { ...this._property, ...rebaseObj };
+    return this;
   }
 
-  public restore(json: string | object) {
+  public restore(json: string | Partial<R>) {
     this.pause();
     const restoreObj = typeof json === "string" ? JSON.parse(json) : json;
     this._observable = Observable.from({ ...this._property, ...restoreObj });
     this.start();
+    return this;
   }
 
   public async send<K extends GetFunctionKeys<R>>(

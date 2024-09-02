@@ -101,7 +101,7 @@ export const useViewFlow = <T, F, R>(
       sync: boolean;
       callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => void,
+  ) => Promise<GetFunctionReturn<T>[K]>,
   (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>,
   R
 ] => {
@@ -122,7 +122,7 @@ export const useViewModel = <T, R>(
       sync: boolean;
       callback?: (ret: GetFunctionReturn<T>[K]) => void;
     }
-  ) => void,
+  ) => Promise<GetFunctionReturn<T>[K]>,
   R
 ] => {
   const state = useInterfaceHandle(keys, vm.context);

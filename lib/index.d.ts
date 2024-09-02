@@ -61,10 +61,10 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private start;
     private stop;
     private pause;
-    restart(): void;
+    restart(): this;
     snapshot(): string;
-    rebase(json: string | object): void;
-    restore(json: string | object): void;
+    rebase(json: string | Partial<R>): this;
+    restore(json: string | Partial<R>): this;
     send<K extends GetFunctionKeys<R>>(name: K, payload: GetFunctionParams<R>[K], options?: {
         sync: boolean;
         callback: (ret: GetFunctionReturn<R>[K]) => void;
@@ -103,10 +103,10 @@ declare const registViewModel: <T, R = unknown>(data: T, options?: PropertyHandl
 declare const useViewFlow: <T, F, R>(vf: ViewFlow<T, F, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => void, (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>, R];
+}) => Promise<GetFunctionReturn<T>[K]>, (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>, R];
 declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => void, R];
+}) => Promise<GetFunctionReturn<T>[K]>, R];
 
 export { DataModel, FlowDecision, PrefixCode, ViewFlow, ViewModel, registViewFlow, registViewModel, useViewFlow, useViewModel };

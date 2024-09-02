@@ -20,8 +20,8 @@ export declare const registViewModel: <T, R = unknown>(data: T, options?: Proper
 export declare const useViewFlow: <T, F, R>(vf: ViewFlow<T, F, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => void, (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>, R];
+}) => Promise<GetFunctionReturn<T>[K]>, (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>, R];
 export declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => void, R];
+}) => Promise<GetFunctionReturn<T>[K]>, R];
