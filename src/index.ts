@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { FlowHanlder } from "./core/handler/FlowHandler";
 import {
   PropertyHandler,
@@ -158,3 +159,26 @@ export const useViewModel = <T, R>(
 
   return [state, send, vm.ref];
 };
+
+// src/core/hooks/useMemoizedViewModel.ts
+export function useMemoizedViewModel<T, R, S>(
+  vm: ViewModel<T, R>,
+  selector: (state: T) => S,
+  keys?: GetDotKeys<T>[]
+): [S, <K extends GetFunctionKeys<T>>(
+    name: K,
+    payload: GetFunctionParams<T>[K],
+    options?: {
+      sync: boolean;
+      callback?: (ret: GetFunctionReturn<T>[K]) => void;
+    }
+  ) => Promise<GetFunctionReturn<T>[K]>,
+  R] {
+  const [state, send, controller] = useViewModel(vm, keys);
+  const selectedState = useMemo(
+    () => selector(state),
+    [state, selector]
+  );
+  
+  return [selectedState, send, controller];
+}

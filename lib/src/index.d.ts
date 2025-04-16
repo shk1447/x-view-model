@@ -26,3 +26,11 @@ export declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
 }) => Promise<GetFunctionReturn<T>[K]>, R];
+export declare function useMemoizedViewModel<T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]): [
+    S,
+    <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
+        sync: boolean;
+        callback?: (ret: GetFunctionReturn<T>[K]) => void;
+    }) => Promise<GetFunctionReturn<T>[K]>,
+    R
+];

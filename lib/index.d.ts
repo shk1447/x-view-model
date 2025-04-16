@@ -108,5 +108,13 @@ declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) 
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
 }) => Promise<GetFunctionReturn<T>[K]>, R];
+declare function useMemoizedViewModel<T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]): [
+    S,
+    <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
+        sync: boolean;
+        callback?: (ret: GetFunctionReturn<T>[K]) => void;
+    }) => Promise<GetFunctionReturn<T>[K]>,
+    R
+];
 
-export { DataModel, FlowDecision, PrefixCode, PropertyHandler, PropertyHandlerOptions, ViewFlow, ViewModel, registViewFlow, registViewModel, useViewFlow, useViewModel };
+export { DataModel, FlowDecision, PrefixCode, PropertyHandler, PropertyHandlerOptions, ViewFlow, ViewModel, registViewFlow, registViewModel, useMemoizedViewModel, useViewFlow, useViewModel };

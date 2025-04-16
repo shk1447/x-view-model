@@ -14,7 +14,10 @@ const useInterfaceHandle = <R>(
 ): R => {
   const [renderCount, setRenderCount] = useState<number>(0);
 
-  const changeState = useCallback(() => {
+  const changeState = useCallback((args) => {
+    if (process.env.NODE_ENV === "development") {
+      console.debug("[x-view-model] State update", "args: ", args);
+    }
     setRenderCount((prev: number) => prev + 1);
   }, []);
 

@@ -64,6 +64,8 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   }
 
   private watch = (changes: Change[]) => {
+    const startTime = performance.now();
+
     changes.forEach((change) => {
       const modifiedArray: Record<any, number> = {};
 
@@ -86,6 +88,16 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
         this.emit(eventName as GetDotKeys<R>, [change.object]);
       }
     });
+
+    if (process.env.NODE_ENV === 'development') {
+      const duration = performance.now() - startTime;
+      if (duration > 33.34) { // 30fps 기준
+        console.warn(
+          `[x-view-model] Slow state update detected (${duration.toFixed(2)}ms)`,
+          changes
+        );
+      }
+    }
   };
 
   public increaseReference() {
