@@ -1,6 +1,7 @@
 import { FlowHanlder } from "./core/handler/FlowHandler";
 import { PropertyHandler, PropertyHandlerOptions } from "./core/handler/PropertyHandler";
 import { GetDotKeys, GetFunctionKeys, GetFunctionParams, GetFunctionReturn } from "./core/types";
+export * from "./core/handler/PropertyHandler";
 export type DataModel<T> = T extends (...args: never[]) => Promise<infer Response> ? Response : never;
 export type ViewModel<T, R> = {
     context: PropertyHandler<T>;

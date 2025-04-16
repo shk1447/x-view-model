@@ -11,6 +11,8 @@ import {
   GetFunctionReturn,
 } from "./core/types";
 
+export * from "./core/handler/PropertyHandler";
+
 export type DataModel<T> = T extends (
   ...args: never[]
 ) => Promise<infer Response>
@@ -146,7 +148,7 @@ export const useViewModel = <T, R>(
         }
         return res;
       } catch (error) {
-        return false;
+        throw error;
       }
     } else {
       vm.context.services.emit(name, [payload]);

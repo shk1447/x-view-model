@@ -109,4 +109,4 @@ declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) 
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
 }) => Promise<GetFunctionReturn<T>[K]>, R];
 
-export { DataModel, FlowDecision, PrefixCode, ViewFlow, ViewModel, registViewFlow, registViewModel, useViewFlow, useViewModel };
+export { DataModel, FlowDecision, PrefixCode, PropertyHandler, PropertyHandlerOptions, ViewFlow, ViewModel, registViewFlow, registViewModel, useViewFlow, useViewModel };
