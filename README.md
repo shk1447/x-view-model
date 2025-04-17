@@ -10,10 +10,6 @@
 
 A lightweight, type-safe MVVM state management solution for React applications
 
-[Documentation](https://shk1447.github.io/x-view-model/docs/introduction/summary) |
-[Getting Started](https://shk1447.github.io/x-view-model/docs/guides/getting_started) |
-[Examples](https://shk1447.github.io/x-view-model/docs/examples/counter)
-
 </div>
 
 ## Why x-view-model?
