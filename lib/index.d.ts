@@ -1,6 +1,6 @@
-type DotPrefix$1<T extends string> = T extends "" ? "" : `.${T}`;
+type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 type GetDotKeys<T> = T extends Date | Array<any> ? "" : (T extends object ? {
-    [K in Exclude<keyof T, symbol>]: `${K}` | `${K}${DotPrefix$1<GetDotKeys<T[K]>>}`;
+    [K in Exclude<keyof T, symbol>]: `${K}` | `${K}${DotPrefix<GetDotKeys<T[K]>>}`;
 }[Exclude<keyof T, symbol>] : "") extends infer D ? Extract<D, string> : never;
 type GetFunctionKeys<T> = {
     [K in Exclude<keyof T, symbol>]: T[K] extends Function ? `${K}` : "";
@@ -108,24 +108,17 @@ declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) 
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
 }) => Promise<GetFunctionReturn<T>[K]>, R];
-type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
 type GetDotKeysImpl<T> = T extends object ? {
-    [K in Exclude<keyof T, symbol>]: K extends string ? `${K}` | `${K}${DotPrefix<GetDotKeysImpl<T[K]>>}` : never;
-}[Exclude<keyof T, symbol>] : "";
-type TypedPath<T> = GetDotKeysImpl<T>;
-type PathValue<T, P extends TypedPath<T>> = P extends `${infer K}.${infer R}` ? K extends keyof T ? R extends TypedPath<T[K]> ? PathValue<T[K], R> : never : never : P extends keyof T ? T[P] : never;
-type PickByPath<T, P extends TypedPath<T>> = {
-    [K in P as K extends `${infer A}.${string}` ? A extends keyof T ? A : never : K extends keyof T ? K : never]: K extends `${infer A}.${infer B}` ? A extends keyof T ? {
-        [SubKey in B as SubKey extends `${infer X}.${string}` ? X : SubKey]: PathValue<T, K>;
-    } : never : K extends keyof T ? T[K] : never;
-};
-declare const useSelectedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
+    [K in keyof T & (string | number)]: T[K] extends object ? K | `${K}.${GetDotKeysImpl<T[K]>}` : K;
+}[keyof T & (string | number)] : never;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+declare const useComputedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K]) => void;
 }) => Promise<GetFunctionReturn<T>[K]>, R];
-declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>[]>(vm: ViewModel<T, R>, keys?: K) => [K extends undefined ? T : PickByPath<T, K[number]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], options?: {
+declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>>(vm: ViewModel<T, R>, keys?: K[]) => [UnionToIntersection<{ [P in K & string]: P extends keyof T ? { [Key in P]: T[Key]; } : P extends `${infer A}.${infer B}` ? A extends keyof T ? B extends keyof T[A] ? { [Key_1 in A]: { [SubKey in B]: T[A][SubKey]; }; } : never : never : never; }[K & string]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], options?: {
     sync: boolean;
     callback?: (ret: GetFunctionReturn<T>[K_1]) => void;
 }) => Promise<GetFunctionReturn<T>[K_1]>, R];
 
-export { DataModel, FlowDecision, PickByPath, PrefixCode, PropertyHandler, PropertyHandlerOptions, TypedPath, ViewFlow, ViewModel, registViewFlow, registViewModel, useMemoizedViewModel, useSelectedViewModel, useViewFlow, useViewModel };
+export { DataModel, FlowDecision, PrefixCode, PropertyHandler, PropertyHandlerOptions, ViewFlow, ViewModel, registViewFlow, registViewModel, useComputedViewModel, useMemoizedViewModel, useViewFlow, useViewModel };

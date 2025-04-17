@@ -161,53 +161,47 @@ export const useViewModel = <T, R>(
   return [state, send, vm.ref];
 };
 
-// src/core/types/partial.ts
-type DotPrefix<T extends string> = T extends "" ? "" : `.${T}`;
-
+// GetDotKeysImpl 타입 (기존 것 유지)
 type GetDotKeysImpl<T> = T extends object
   ? {
-      [K in Exclude<keyof T, symbol>]: K extends string
-        ? `${K}` | `${K}${DotPrefix<GetDotKeysImpl<T[K]>>}`
-        : never;
-    }[Exclude<keyof T, symbol>]
-  : "";
+      [K in keyof T & (string | number)]: T[K] extends object
+        ? K | `${K}.${GetDotKeysImpl<T[K]>}`
+        : K;
+    }[keyof T & (string | number)]
+  : never;
+// Union을 Intersection으로 변환 (유지)
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
 
-// Path와 GetDotKeys를 통합한 새로운 타입
-export type TypedPath<T> = GetDotKeysImpl<T>;
-
-// 점으로 구분된 경로를 기반으로 타입을 추출
-type PathValue<T, P extends TypedPath<T>> = P extends `${infer K}.${infer R}`
-  ? K extends keyof T
-    ? R extends TypedPath<T[K]>
-      ? PathValue<T[K], R>
+// 경로에 따른 값의 타입을 추출하는 헬퍼
+type PathValue<T, P extends string> = P extends `${infer Key}.${infer Rest}`
+  ? Key extends keyof T
+    ? Rest extends keyof T[Key]
+      ? T[Key][Rest]
       : never
     : never
   : P extends keyof T
   ? T[P]
   : never;
 
-// 주어진 경로들에 대한 부분 상태 타입 생성
-export type PickByPath<T, P extends TypedPath<T>> = {
-  [K in P as K extends `${infer A}.${string}`
-    ? A extends keyof T
-      ? A
-      : never
-    : K extends keyof T
-    ? K
-    : never]: K extends `${infer A}.${infer B}`
-    ? A extends keyof T
-      ? {
-          [SubKey in B as SubKey extends `${infer X}.${string}`
-            ? X
-            : SubKey]: PathValue<T, K>;
-        }
-      : never
-    : K extends keyof T
-    ? T[K]
-    : never;
-};
-
-export const useSelectedViewModel = <T, R, S>(
+// 최적화된 인라인 캐시 Pick 타입
+type FastPickByPath<T, K extends GetDotKeysImpl<T>> = UnionToIntersection<
+  {
+    [P in K & string]: P extends keyof T
+      ? { [Key in P]: T[Key] }
+      : P extends `${infer A}.${infer B}`
+      ? A extends keyof T
+        ? B extends keyof T[A]
+          ? { [Key in A]: { [SubKey in B]: T[A][SubKey] } }
+          : never
+        : never
+      : never;
+  }[K & string]
+>;
+export const useComputedViewModel = <T, R, S>(
   vm: ViewModel<T, R>,
   selector: (state: T) => S,
   keys?: GetDotKeys<T>[]
@@ -230,11 +224,11 @@ export const useSelectedViewModel = <T, R, S>(
 };
 
 // src/core/hooks/useMemoizedViewModel.ts
-export const useMemoizedViewModel = <T, R, K extends TypedPath<T>[]>(
+export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
   vm: ViewModel<T, R>,
-  keys?: K
+  keys?: K[]
 ): [
-  K extends undefined ? T : PickByPath<T, K[number]>,
+  K[] extends undefined | [] ? T : FastPickByPath<T, K>,
   <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
@@ -254,7 +248,7 @@ export const useMemoizedViewModel = <T, R, K extends TypedPath<T>[]>(
 
   // keys에 해당하는 상태만 추출하여 메모이제이션
   const memoizedState = useMemo(() => {
-    const partialState = {} as PickByPath<T, K[number]>;
+    const partialState = {} as FastPickByPath<T, K>;
 
     keys.forEach((key) => {
       const value = get(fullState, key as string);
@@ -264,9 +258,5 @@ export const useMemoizedViewModel = <T, R, K extends TypedPath<T>[]>(
     return partialState;
   }, [fullState, keys]);
 
-  return [memoizedState, send, ref] as [
-    K extends undefined ? T : PickByPath<T, K[number]>,
-    typeof vm.context.send,
-    R
-  ];
+  return [memoizedState, send, ref];
 };
