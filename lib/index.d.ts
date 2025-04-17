@@ -65,10 +65,7 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     snapshot(): string;
     rebase(json: string | Partial<R>): this;
     restore(json: string | Partial<R>): this;
-    send<K extends GetFunctionKeys<R>>(name: K, payload: GetFunctionParams<R>[K], options?: {
-        sync: boolean;
-        callback: (ret: GetFunctionReturn<R>[K]) => void;
-    }): Promise<any>;
+    send<K extends GetFunctionKeys<R>>(name: K, payload: GetFunctionParams<R>[K], async?: boolean): Promise<GetFunctionReturn<R>[K] extends Promise<infer U> ? U : GetFunctionReturn<R>[K]>;
 }
 
 type DataModel<T> = T extends (...args: never[]) => Promise<infer Response> ? Response : never;

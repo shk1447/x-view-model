@@ -89,11 +89,14 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
       }
     });
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       const duration = performance.now() - startTime;
-      if (duration > 33.34) { // 30fps 기준
+      if (duration > 33.34) {
+        // 30fps 기준
         console.warn(
-          `[x-view-model] Slow state update detected (${duration.toFixed(2)}ms)`,
+          `[x-view-model] Slow state update detected (${duration.toFixed(
+            2
+          )}ms)`,
           changes
         );
       }
@@ -163,26 +166,25 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   public async send<K extends GetFunctionKeys<R>>(
     name: K,
     payload: GetFunctionParams<R>[K],
-    options?: {
-      sync: boolean;
-      callback: (ret: GetFunctionReturn<R>[K]) => void;
-    }
-  ): Promise<any> {
-    if (options && options.sync) {
+    async: boolean = false
+  ): Promise<
+    GetFunctionReturn<R>[K] extends Promise<infer U>
+      ? U
+      : GetFunctionReturn<R>[K]
+  > {
+    if (async) {
       try {
         const res = await (this.property[name] as any).apply(this.state, [
           payload,
         ]);
-        if (options.callback) {
-          options.callback(res);
-        }
+
         return res;
       } catch (error) {
-        return false;
+        throw error;
       }
     } else {
       this.services.emit(name, [payload]);
-      return false;
+      return undefined as any;
     }
   }
 }
