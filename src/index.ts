@@ -1,5 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
-import { FlowHanlder } from "./core/handler/FlowHandler";
+import { useMemo } from "react";
 import {
   PropertyHandler,
   PropertyHandlerOptions,
@@ -26,58 +25,6 @@ export type ViewModel<T, R> = {
   ref: R;
 };
 
-export type ViewFlow<T, F, R> = ViewModel<T, R> & {
-  flow: FlowHanlder<F, T>;
-};
-
-export type PrefixCode<T> = T extends string ? `#${T}` : never;
-
-export type FlowDecision<T, F> = {
-  invoke: (
-    context: PropertyHandler<T>["state"],
-    prev?: PrefixCode<GetDotKeys<F>>,
-    err?: any
-  ) => void;
-  onDone?:
-    | PrefixCode<GetDotKeys<F>>
-    | ((
-        context: PropertyHandler<T>["state"],
-        prev?: PrefixCode<GetDotKeys<F>>,
-        err?: any
-      ) =>
-        | Promise<PrefixCode<GetDotKeys<F>>>
-        | PrefixCode<GetDotKeys<F>>
-        | undefined);
-  onError?:
-    | PrefixCode<GetDotKeys<F>>
-    | ((
-        context: PropertyHandler<T>["state"],
-        prev?: PrefixCode<GetDotKeys<F>>,
-        err?: any
-      ) =>
-        | Promise<PrefixCode<GetDotKeys<F>>>
-        | PrefixCode<GetDotKeys<F>>
-        | undefined);
-};
-
-export const registViewFlow = <T, F, R = unknown>(
-  data: T,
-  flow: Record<GetDotKeys<F>, FlowDecision<T, F>>,
-  options?: PropertyHandlerOptions,
-  ref?: R
-): ViewFlow<T, F, R> => {
-  const handler = new PropertyHandler<T>(data, options);
-  const fHandler = new FlowHanlder<F, T>(flow, handler);
-
-  const vm = {
-    context: handler,
-    flow: fHandler,
-    ref: ref,
-  };
-
-  return vm;
-};
-
 export const registViewModel = <T, R = unknown>(
   data: T,
   options?: PropertyHandlerOptions,
@@ -93,27 +40,6 @@ export const registViewModel = <T, R = unknown>(
   return vm;
 };
 
-export const useViewFlow = <T, F, R>(
-  vf: ViewFlow<T, F, R>,
-  keys?: GetDotKeys<T>[]
-): [
-  T,
-  <K extends GetFunctionKeys<T>>(
-    name: K,
-    payload: GetFunctionParams<T>[K],
-    options?: {
-      sync: boolean;
-      callback?: (ret: GetFunctionReturn<T>[K]) => void;
-    }
-  ) => Promise<GetFunctionReturn<T>[K]>,
-  (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>,
-  R
-] => {
-  const [state, send] = useViewModel(vf, keys);
-
-  return [state, send, vf.flow.send, vf.ref];
-};
-
 export const useViewModel = <T, R>(
   vm: ViewModel<T, R>,
   keys?: GetDotKeys<T>[]
@@ -122,11 +48,12 @@ export const useViewModel = <T, R>(
   <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
-    options?: {
-      sync: boolean;
-      callback?: (ret: GetFunctionReturn<T>[K]) => void;
-    }
-  ) => Promise<GetFunctionReturn<T>[K]>,
+    async?: boolean
+  ) => Promise<
+    GetFunctionReturn<T>[K] extends Promise<infer U>
+      ? U
+      : GetFunctionReturn<T>[K]
+  >,
   R
 ] => {
   const state = useInterfaceHandle(keys, vm.context);
@@ -134,27 +61,25 @@ export const useViewModel = <T, R>(
   const send = async <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
-    options?: {
-      sync: boolean;
-      callback: (ret: GetFunctionReturn<T>[K]) => void;
-    }
-  ): Promise<any> => {
-    if (options && options.sync) {
+    async: boolean = false
+  ): Promise<
+    GetFunctionReturn<T>[K] extends Promise<infer U>
+      ? U
+      : GetFunctionReturn<T>[K]
+  > => {
+    if (async) {
       try {
         const res = await (vm.context.property[name] as any).apply(
           vm.context.state,
           [payload]
         );
-        if (options.callback) {
-          options.callback(res);
-        }
         return res;
       } catch (error) {
         throw error;
       }
     } else {
       vm.context.services.emit(name, [payload]);
-      return false;
+      return undefined as any;
     }
   };
 
@@ -169,22 +94,12 @@ type GetDotKeysImpl<T> = T extends object
         : K;
     }[keyof T & (string | number)]
   : never;
+
 // Union을 Intersection으로 변환 (유지)
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I
 ) => void
   ? I
-  : never;
-
-// 경로에 따른 값의 타입을 추출하는 헬퍼
-type PathValue<T, P extends string> = P extends `${infer Key}.${infer Rest}`
-  ? Key extends keyof T
-    ? Rest extends keyof T[Key]
-      ? T[Key][Rest]
-      : never
-    : never
-  : P extends keyof T
-  ? T[P]
   : never;
 
 // 최적화된 인라인 캐시 Pick 타입
@@ -210,11 +125,12 @@ export const useComputedViewModel = <T, R, S>(
   <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
-    options?: {
-      sync: boolean;
-      callback?: (ret: GetFunctionReturn<T>[K]) => void;
-    }
-  ) => Promise<GetFunctionReturn<T>[K]>,
+    async?: boolean
+  ) => Promise<
+    GetFunctionReturn<T>[K] extends Promise<infer U>
+      ? U
+      : GetFunctionReturn<T>[K]
+  >,
   R
 ] => {
   const [state, send, controller] = useViewModel(vm, keys);
@@ -232,11 +148,12 @@ export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
   <K extends GetFunctionKeys<T>>(
     name: K,
     payload: GetFunctionParams<T>[K],
-    options?: {
-      sync: boolean;
-      callback?: (ret: GetFunctionReturn<T>[K]) => void;
-    }
-  ) => Promise<GetFunctionReturn<T>[K]>,
+    async?: boolean
+  ) => Promise<
+    GetFunctionReturn<T>[K] extends Promise<infer U>
+      ? U
+      : GetFunctionReturn<T>[K]
+  >,
   R
 ] => {
   const [fullState, send, ref] = useViewModel(vm, keys as any);

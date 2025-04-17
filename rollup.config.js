@@ -4,16 +4,20 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import dts from "rollup-plugin-dts";
+import { terser } from "rollup-plugin-terser";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx", ".scss"];
 
 process.env.BABEL_ENV = "production";
 
-function setUpRollup({ input, output }) {
+function setUpRollup({ input, output, minify = false }) {
   return {
     input,
     exports: "named",
-    output,
+    output: {
+      ...output,
+      sourcemap: true,
+    },
     watch: {
       include: "*",
       exclude: "node_modules/**",
@@ -21,45 +25,67 @@ function setUpRollup({ input, output }) {
     plugins: [
       peerDepsExternal(),
       json(),
-      resolve({ extensions }),
+      resolve({ 
+        extensions,
+        preferBuiltins: true,
+      }),
       commonjs({
         include: /node_modules/,
       }),
-      typescript(),
+      typescript({
+        useTsconfigDeclarationDir: true,
+        tsconfigOverride: {
+          compilerOptions: {
+            declaration: true,
+            declarationDir: "lib/types",
+          },
+        },
+      }),
+      ...(minify ? [terser()] : []),
     ],
     external: ["react", "react-dom"],
   };
 }
 
 export default [
-  setUpRollup({
-    input: "./src/index.ts",
-    output: {
-      file: "lib/index.js",
-      sourcemap: false,
-      format: "cjs",
-    },
-  }),
+  // ESM (unminified)
   setUpRollup({
     input: "./src/index.ts",
     output: {
       file: "lib/index.esm.js",
-      sourcemap: false,
       format: "esm",
     },
   }),
-  // 타입 정의 파일 번들링
+  // ESM (minified)
+  setUpRollup({
+    input: "./src/index.ts",
+    output: {
+      file: "lib/index.esm.min.js",
+      format: "esm",
+    },
+    minify: true,
+  }),
+  // CJS (unminified)
+  setUpRollup({
+    input: "./src/index.ts",
+    output: {
+      file: "lib/index.js",
+      format: "cjs",
+    },
+  }),
+  // CJS (minified)
+  setUpRollup({
+    input: "./src/index.ts",
+    output: {
+      file: "lib/index.min.js",
+      format: "cjs",
+    },
+    minify: true,
+  }),
+  // Type definitions
   {
     input: "src/index.ts",
     output: [{ file: "lib/index.d.ts", format: "cjs" }],
-    plugins: [
-      dts(),
-      //   alias({
-      //     entries: [
-      //       { find: "@vases-ui", replacement: path.resolve(__dirname, "src") },
-      //     ],
-      //   }),
-      // 타입 정의 파일은 가독성을 위해 prettier 적용
-    ],
+    plugins: [dts()],
   },
 ];

@@ -1,4 +1,4 @@
-import { FlowDecision, PrefixCode } from "../..";
+import { FlowDecision } from "../..";
 import { GetDotKeys } from "../types";
 import { EventHandler } from "./EventHandler";
 import { PropertyHandler } from "./PropertyHandler";

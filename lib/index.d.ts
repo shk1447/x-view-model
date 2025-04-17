@@ -71,54 +71,18 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     }): Promise<any>;
 }
 
-declare class FlowHanlder<F, T> extends EventHandler<F> {
-    private _flow;
-    private _handler;
-    private _current;
-    private _fns;
-    constructor(flow: Record<GetDotKeys<F>, FlowDecision<T, F>>, handler: PropertyHandler<T>);
-    private get current();
-    private set current(value);
-    onCurrentChange: (fn: (current: GetDotKeys<F>) => void) => void;
-    offCurrentChange: (fn: (current: GetDotKeys<F>) => void) => void;
-    send: (target: PrefixCode<GetDotKeys<F>>, prev?: PrefixCode<GetDotKeys<F>>, err?: any) => Promise<boolean>;
-}
-
 type DataModel<T> = T extends (...args: never[]) => Promise<infer Response> ? Response : never;
 type ViewModel<T, R> = {
     context: PropertyHandler<T>;
     ref: R;
 };
-type ViewFlow<T, F, R> = ViewModel<T, R> & {
-    flow: FlowHanlder<F, T>;
-};
-type PrefixCode<T> = T extends string ? `#${T}` : never;
-type FlowDecision<T, F> = {
-    invoke: (context: PropertyHandler<T>["state"], prev?: PrefixCode<GetDotKeys<F>>, err?: any) => void;
-    onDone?: PrefixCode<GetDotKeys<F>> | ((context: PropertyHandler<T>["state"], prev?: PrefixCode<GetDotKeys<F>>, err?: any) => Promise<PrefixCode<GetDotKeys<F>>> | PrefixCode<GetDotKeys<F>> | undefined);
-    onError?: PrefixCode<GetDotKeys<F>> | ((context: PropertyHandler<T>["state"], prev?: PrefixCode<GetDotKeys<F>>, err?: any) => Promise<PrefixCode<GetDotKeys<F>>> | PrefixCode<GetDotKeys<F>> | undefined);
-};
-declare const registViewFlow: <T, F, R = unknown>(data: T, flow: Record<GetDotKeys<F>, FlowDecision<T, F>>, options?: PropertyHandlerOptions, ref?: R) => ViewFlow<T, F, R>;
 declare const registViewModel: <T, R = unknown>(data: T, options?: PropertyHandlerOptions, ref?: R) => ViewModel<T, R>;
-declare const useViewFlow: <T, F, R>(vf: ViewFlow<T, F, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
-    sync: boolean;
-    callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => Promise<GetFunctionReturn<T>[K]>, (current: PrefixCode<GetDotKeys<F>>) => Promise<boolean>, R];
-declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
-    sync: boolean;
-    callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => Promise<GetFunctionReturn<T>[K]>, R];
+declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[]) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
 type GetDotKeysImpl<T> = T extends object ? {
     [K in keyof T & (string | number)]: T[K] extends object ? K | `${K}.${GetDotKeysImpl<T[K]>}` : K;
 }[keyof T & (string | number)] : never;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-declare const useComputedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], options?: {
-    sync: boolean;
-    callback?: (ret: GetFunctionReturn<T>[K]) => void;
-}) => Promise<GetFunctionReturn<T>[K]>, R];
-declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>>(vm: ViewModel<T, R>, keys?: K[]) => [UnionToIntersection<{ [P in K & string]: P extends keyof T ? { [Key in P]: T[Key]; } : P extends `${infer A}.${infer B}` ? A extends keyof T ? B extends keyof T[A] ? { [Key_1 in A]: { [SubKey in B]: T[A][SubKey]; }; } : never : never : never; }[K & string]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], options?: {
-    sync: boolean;
-    callback?: (ret: GetFunctionReturn<T>[K_1]) => void;
-}) => Promise<GetFunctionReturn<T>[K_1]>, R];
+declare const useComputedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[]) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
+declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>>(vm: ViewModel<T, R>, keys?: K[]) => [UnionToIntersection<{ [P in K & string]: P extends keyof T ? { [Key in P]: T[Key]; } : P extends `${infer A}.${infer B}` ? A extends keyof T ? B extends keyof T[A] ? { [Key_1 in A]: { [SubKey in B]: T[A][SubKey]; }; } : never : never : never; }[K & string]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], async?: boolean) => Promise<GetFunctionReturn<T>[K_1] extends Promise<infer U> ? U : GetFunctionReturn<T>[K_1]>, R];
 
-export { DataModel, FlowDecision, PrefixCode, PropertyHandler, PropertyHandlerOptions, ViewFlow, ViewModel, registViewFlow, registViewModel, useComputedViewModel, useMemoizedViewModel, useViewFlow, useViewModel };
+export { DataModel, PropertyHandler, PropertyHandlerOptions, ViewModel, registViewModel, useComputedViewModel, useMemoizedViewModel, useViewModel };
