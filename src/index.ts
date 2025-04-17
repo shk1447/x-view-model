@@ -158,22 +158,5 @@ export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
 ] => {
   const [fullState, send, ref] = useViewModel(vm, keys as any);
 
-  // keys가 없으면 전체 상태를 반환
-  if (!keys || keys.length === 0) {
-    return [fullState, send, ref] as any;
-  }
-
-  // keys에 해당하는 상태만 추출하여 메모이제이션
-  const memoizedState = useMemo(() => {
-    const partialState = {} as FastPickByPath<T, K>;
-
-    keys.forEach((key) => {
-      const value = get(fullState, key as string);
-      set(partialState, key as string, value);
-    });
-
-    return partialState;
-  }, [fullState, keys]);
-
-  return [memoizedState, send, ref];
+  return [fullState, send, ref] as any;
 };
