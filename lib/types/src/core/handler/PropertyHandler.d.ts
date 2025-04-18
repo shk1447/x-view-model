@@ -1,10 +1,13 @@
+import { Change } from "../observer";
 import { GetDotKeys, GetFunctionKeys, GetFunctionParams, GetFunctionReturn } from "../types";
 import { EventHandler } from "./EventHandler";
 import { NameSpacesHandler } from "./NameSpacesHandler";
 import { ServiceHandler } from "./ServiceHandler";
+export type Middleware<T> = (changes: Change[], next: () => void, state: T) => void | Promise<void>;
 export type PropertyHandlerOptions = {
     name: string;
     deep: boolean;
+    middlewares?: Middleware<any>[];
 };
 export declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private _property;
@@ -12,9 +15,12 @@ export declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private _reference;
     private _started;
     private _options?;
+    private middlewares;
     services: ServiceHandler<R>;
     namespaces: NameSpacesHandler;
     constructor(init_property: R, options?: PropertyHandlerOptions);
+    use(middleware: Middleware<R>): this;
+    private executeMiddlewares;
     get state(): R;
     get property(): R;
     get reference(): number;

@@ -1,4 +1,4 @@
-import { Change, ObjectObserver, Observable } from "../observer";
+import { Change, Observable } from "../observer";
 import {
   GetDotKeys,
   GetFunctionKeys,
@@ -9,10 +9,17 @@ import { EventHandler } from "./EventHandler";
 import { NameSpacesHandler } from "./NameSpacesHandler";
 import { ServiceHandler } from "./ServiceHandler";
 
+export type Middleware<T> = (
+  changes: Change[],
+  next: () => void,
+  state: T
+) => void | Promise<void>;
+
 export type PropertyHandlerOptions = {
   name: string;
   // 하위 데이터 변경시 이벤트가 발생됩니다.
   deep: boolean;
+  middlewares?: Middleware<any>[];
 };
 
 export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
@@ -21,6 +28,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private _reference: number;
   private _started: boolean;
   private _options?: PropertyHandlerOptions;
+  private middlewares: Middleware<R>[] = [];
 
   public services: ServiceHandler<R>;
 
@@ -34,6 +42,34 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._started = false;
     this.services = new ServiceHandler<R>(this);
     this.namespaces = NameSpacesHandler.getInstance();
+    this.middlewares = options?.middlewares || [];
+  }
+
+  use(middleware: Middleware<R>) {
+    this.middlewares.push(middleware);
+    return this;
+  }
+
+  private async executeMiddlewares(
+    changes: Change[],
+    next: () => void
+  ): Promise<void> {
+    // 미들웨어가 없는 경우 바로 next 실행
+    if (this.middlewares.length === 0) {
+      next();
+      return;
+    }
+
+    type MiddlewareChain = () => void | Promise<void>;
+
+    const chain = this.middlewares.reduceRight<MiddlewareChain>(
+      (nextMiddleware, currentMiddleware) => {
+        return () => currentMiddleware(changes, nextMiddleware, this.state);
+      },
+      next
+    );
+
+    await chain();
   }
 
   public get state() {
@@ -63,36 +99,32 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     }
   }
 
-  private watch = (changes: Change[]) => {
+  private watch = async (changes: Change[]) => {
     const startTime = performance.now();
 
-    changes.forEach((change) => {
-      const modifiedArray: Record<any, number> = {};
+    await this.executeMiddlewares(changes, () => {
+      for (const change of changes) {
+        const paths = change.path.filter((d) => typeof d != "number");
 
-      const paths = change.path.filter((d) => typeof d != "number");
-
-      if (this._options?.deep) {
-        let eventName = "";
-
-        paths.forEach((item) => {
-          eventName += item + ".";
-
-          this.emit(
-            eventName.substring(0, eventName.length - 1) as GetDotKeys<R>,
-            [change.object]
-          );
-        });
-      } else {
-        const eventName = paths.join(".");
-
-        this.emit(eventName as GetDotKeys<R>, [change.object]);
+        if (this._options?.deep) {
+          let eventName = "";
+          paths.forEach((item) => {
+            eventName += item + ".";
+            this.emit(
+              eventName.substring(0, eventName.length - 1) as GetDotKeys<R>,
+              [change.object]
+            );
+          });
+        } else {
+          const eventName = paths.join(".");
+          this.emit(eventName as GetDotKeys<R>, [change.object]);
+        }
       }
     });
 
     if (process.env.NODE_ENV === "development") {
       const duration = performance.now() - startTime;
       if (duration > 33.34) {
-        // 30fps 기준
         console.warn(
           `[x-view-model] Slow state update detected (${duration.toFixed(
             2

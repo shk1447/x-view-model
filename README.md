@@ -8,41 +8,41 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/x-view-model)](https://bundlephobia.com/package/x-view-model)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
 
-A lightweight, type-safe MVVM state management solution for React applications
+React 애플리케이션을 위한 가벼우면서 타입 안전한 MVVM 상태 관리 솔루션
 
 </div>
 
-## Why x-view-model?
+## x-view-model을 선택하는 이유
 
-x-view-model is designed to provide a simple yet powerful state management solution for React applications. It combines the best practices of MVVM pattern with modern React features:
+x-view-model은 React 애플리케이션에 간단하면서도 강력한 상태 관리 솔루션을 제공하기 위해 설계되었습니다. MVVM 패턴의 모범 사례를 현대적인 React 기능과 결합합니다:
 
-- 🚀 **High Performance**: Optimized for minimal re-renders and efficient updates
-- 💪 **Type Safety**: Full TypeScript support with comprehensive type inference
-- 🎯 **MVVM Pattern**: Clean separation of concerns between view and business logic
-- 🔄 **Reactive**: Automatic updates when state changes
-- 🎨 **Computed Properties**: Derive values from state with automatic updates
-- 🔍 **Deep Path Selection**: Subscribe to nested state changes efficiently
-- 📦 **Lightweight**: Minimal bundle size (~13.5KB minified, ~5KB gzipped)
-- 🛠 **Developer Experience**: Intuitive API with comprehensive tooling
-- 🔄 **Smart Memory Management**: Automatic disposal through reference counting
+- 🚀 **높은 성능**: 최소한의 리렌더링과 효율적인 업데이트에 최적화
+- 💪 **타입 안전성**: 포괄적인 타입 추론을 통한 완벽한 TypeScript 지원
+- 🎯 **MVVM 패턴**: 뷰와 비즈니스 로직 간의 명확한 관심사 분리
+- 🔄 **반응형**: 상태 변경 시 자동 업데이트
+- 🎨 **계산된 속성**: 자동 업데이트와 함께 상태에서 값을 파생
+- 🔍 **깊은 경로 선택**: 중첩된 상태 변경에 효율적으로 구독
+- 📦 **경량**: 최소 번들 크기 (~13.5KB 압축, ~5KB gzipped)
+- 🛠 **개발자 경험**: 포괄적인 도구와 직관적인 API
+- 🔄 **스마트 메모리 관리**: 참조 카운팅을 통한 자동 처리
 
-## Why Choose x-view-model Over Other Solutions?
+## 다른 솔루션 대신 x-view-model을 선택하는 이유
 
-### 🏆 Superior TypeScript Support
+### 🏆 우수한 TypeScript 지원
 
-Unlike other state management libraries that add TypeScript support as an afterthought, x-view-model is built with TypeScript from the ground up:
+TypeScript 지원을 사후 고려로 추가하는 다른 상태 관리 라이브러리와 달리, x-view-model은 처음부터 TypeScript로 구축되었습니다:
 
 ```typescript
-// Full type inference for state and methods
+// 상태와 메서드에 대한 완전한 타입 추론
 const [state, send] = useViewModel(userVM, ["name", "email"]);
 
-// Type-safe path selection
+// 타입 안전한 경로 선택
 const [state] = useMemoizedViewModel(userVM, [
   "profile.avatar",
   "settings.theme",
 ] as const);
 
-// Type-safe computed values
+// 타입 안전한 계산된 값
 const [state] = useComputedViewModel(
   userVM,
   (state) => ({
@@ -52,23 +52,23 @@ const [state] = useComputedViewModel(
 );
 ```
 
-### ⚡️ Unmatched Performance
+### ⚡️ 뛰어난 성능
 
-x-view-model is designed for maximum performance:
+x-view-model은 최고의 성능을 위해 설계되었습니다:
 
-- **Zero Dependencies**: No external dependencies means faster loading and smaller bundle size
-- **Smart Updates**: Only re-renders components when their subscribed state changes
-- **Efficient Path Selection**: Subscribe to specific state paths to minimize re-renders
-- **Optimized Computations**: Computed values are cached and only recomputed when dependencies change
-- **Tree-shakeable**: Only include the code you use in your final bundle
-- **Smart Resource Management**: Automatic disposal of unused view models through reference counting
+- **제로 의존성**: 외부 의존성이 없어 더 빠른 로딩과 작은 번들 크기
+- **스마트 업데이트**: 구독된 상태가 변경될 때만 컴포넌트 리렌더링
+- **효율적인 경로 선택**: 리렌더링을 최소화하기 위해 특정 상태 경로 구독
+- **최적화된 계산**: 계산된 값은 캐시되며 의존성이 변경될 때만 재계산
+- **트리 쉐이킹 가능**: 최종 번들에 사용하는 코드만 포함
+- **스마트 리소스 관리**: 참조 카운팅을 통한 미사용 뷰 모델의 자동 처리
 
-### 🎯 Clean Architecture
+### 🎯 깔끔한 아키텍처
 
-The MVVM pattern provides a clear separation of concerns:
+MVVM 패턴은 관심사의 명확한 분리를 제공합니다:
 
 ```typescript
-// View Model (Business Logic)
+// 뷰 모델 (비즈니스 로직)
 const userVM = registViewModel<UserContext>({
   name: "",
   email: "",
@@ -78,7 +78,7 @@ const userVM = registViewModel<UserContext>({
   },
 });
 
-// View (UI)
+// 뷰 (UI)
 function UserProfile() {
   const [state, send] = useViewModel(userVM, ["name", "email"]);
   return (
@@ -93,65 +93,65 @@ function UserProfile() {
 }
 ```
 
-### 🔄 Seamless Async Support
+### 🔄 원활한 비동기 지원
 
-Handle asynchronous operations with ease:
+비동기 작업을 쉽게 처리할 수 있습니다:
 
 ```typescript
 const [state, send] = useViewModel(userVM, ["loading", "data"]);
 
-// Event-based call
+// 이벤트 기반 호출
 send("fetchData");
 
-// Async call with return value
+// 반환 값이 있는 비동기 호출
 const result = await send("fetchData", {}, true);
 
-// Type-safe error handling
+// 타입 안전한 오류 처리
 try {
   const data = await send("fetchData", {}, true);
 } catch (error) {
-  // Handle error
+  // 오류 처리
 }
 ```
 
-### 📊 Performance Comparison
+### 📊 성능 비교
 
-| Feature            | x-view-model | Redux  | MobX     | Zustand  |
-| ------------------ | ------------ | ------ | -------- | -------- |
-| Bundle Size        | ~13.5KB      | ~7KB   | ~16KB    | ~1KB     |
-| TypeScript Support | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Learning Curve     | ⭐⭐⭐⭐     | ⭐⭐   | ⭐⭐⭐   | ⭐⭐⭐⭐ |
-| Performance        | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Code Complexity    | ⭐⭐⭐⭐⭐   | ⭐⭐   | ⭐⭐⭐   | ⭐⭐⭐⭐ |
-| Async Support      | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 기능            | x-view-model | Redux  | MobX     | Zustand  |
+| -------------- | ------------ | ------ | -------- | -------- |
+| 번들 크기        | ~13.5KB      | ~7KB   | ~16KB    | ~1KB     |
+| TypeScript 지원 | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 학습 곡선        | ⭐⭐⭐⭐     | ⭐⭐   | ⭐⭐⭐   | ⭐⭐⭐⭐ |
+| 성능            | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 코드 복잡성      | ⭐⭐⭐⭐⭐   | ⭐⭐   | ⭐⭐⭐   | ⭐⭐⭐⭐ |
+| 비동기 지원      | ⭐⭐⭐⭐⭐   | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
 
-## Installation
+## 설치
 
 ```bash
 npm install x-view-model
 
-# or using yarn
+# 또는 yarn 사용
 yarn add x-view-model
 
-# or using pnpm
+# 또는 pnpm 사용
 pnpm add x-view-model
 ```
 
-## Quick Start
+## 빠른 시작
 
-Here's a simple counter example to get you started:
+간단한 카운터 예제로 시작해보세요:
 
 ```typescript
 import { registViewModel, useViewModel } from "x-view-model";
 
-// Define your view model interface
+// 뷰 모델 인터페이스 정의
 interface CounterViewModel {
   count: number;
   increment(): void;
   decrement(): void;
 }
 
-// Create a view model
+// 뷰 모델 생성
 const counterVM = registViewModel<CounterViewModel>(
   {
     count: 0,
@@ -165,10 +165,10 @@ const counterVM = registViewModel<CounterViewModel>(
   { name: "counter-view-model", deep: true }
 );
 
-// Use in your component
+// 컴포넌트에서 사용
 function Counter() {
-  // The second parameter ["count"] specifies which state properties to subscribe to
-  // This optimizes re-renders by only updating when these specific properties change
+  // 두 번째 매개변수 ["count"]는 구독할 상태 속성을 지정합니다
+  // 이는 이러한 특정 속성이 변경될 때만 업데이트하여 리렌더링을 최적화합니다
   const { state, increment, decrement } = useViewModel(counterVM, ["count"]);
 
   return (
@@ -181,11 +181,11 @@ function Counter() {
 }
 ```
 
-## Core Concepts
+## 핵심 개념
 
-### View Models
+### 뷰 모델
 
-View models encapsulate your application's business logic and state. They provide a clean separation between your UI and business logic:
+뷰 모델은 애플리케이션의 비즈니스 로직과 상태를 캡슐화합니다. UI와 비즈니스 로직 사이의 깔끔한 분리를 제공합니다:
 
 ```typescript
 type UserState = {
@@ -229,7 +229,7 @@ const userVM = registViewModel<UserContext>(
       if (data.email) this.state.email = data.email;
     },
     async fetchUserData(data: { userId: string }) {
-      // Simulate API call
+      // API 호출 시뮬레이션
       return {
         id: data.userId,
         name: "John Doe",
@@ -241,35 +241,35 @@ const userVM = registViewModel<UserContext>(
 );
 ```
 
-### Hooks
+### 훅
 
 #### useViewModel
 
-The basic hook for accessing view model state and methods:
+뷰 모델 상태와 메서드에 접근하기 위한 기본 훅:
 
 ```typescript
 const [state, send] = useViewModel(userVM, ["name", "email"]);
 
-// Send function usage examples:
-// 1. Update profile (void return)
-send("updateProfile", { name: "John Doe" }); // Event-based call
-await send("updateProfile", { name: "John Doe" }, true); // Async call
+// send 함수 사용 예시:
+// 1. 프로필 업데이트 (void 반환)
+send("updateProfile", { name: "John Doe" }); // 이벤트 기반 호출
+await send("updateProfile", { name: "John Doe" }, true); // 비동기 호출
 
-// 2. Fetch data (with return value)
-const userData = await send("fetchUserData", { userId: "123" }, true); // Returns user data
-// userData will be: { id: "123", name: "John Doe", email: "john@example.com" }
+// 2. 데이터 가져오기 (반환 값 있음)
+const userData = await send("fetchUserData", { userId: "123" }, true); // 사용자 데이터 반환
+// userData는 다음과 같습니다: { id: "123", name: "John Doe", email: "john@example.com" }
 
-/* The send function's behavior depends on the async parameter:
- * - When async is false (default): Calls the method as an event and returns void
- * - When async is true: Calls the method and returns its result
- *   - If the method returns a Promise, it will be unwrapped
- *   - If the method returns a value directly, that value will be returned
+/* send 함수의 동작은 async 매개변수에 따라 다릅니다:
+ * - async가 false인 경우 (기본값): 메서드를 이벤트로 호출하고 void를 반환
+ * - async가 true인 경우: 메서드를 호출하고 결과를 반환
+ *   - 메서드가 Promise를 반환하면 풀어서 반환
+ *   - 메서드가 직접 값을 반환하면 해당 값을 반환
  */
 ```
 
 #### useMemoizedViewModel
 
-Optimized hook for selecting specific paths from your view model:
+뷰 모델에서 특정 경로를 선택하기 위한 최적화된 훅:
 
 ```typescript
 const [state, send] = useMemoizedViewModel(userVM, [
@@ -278,18 +278,18 @@ const [state, send] = useMemoizedViewModel(userVM, [
   "settings.theme",
 ] as const);
 
-/* useMemoizedViewModel only subscribes to and returns the specified state paths.
- * In this example, the state object will only contain:
+/* useMemoizedViewModel은 지정된 상태 경로만 구독하고 반환합니다.
+ * 이 예제에서 state 객체는 다음만 포함합니다:
  * - state.name
  * - state.profile.avatar
  * - state.settings.theme
- * Other properties will not be included in the state object.
+ * 다른 속성은 state 객체에 포함되지 않습니다.
  */
 ```
 
 #### useComputedViewModel
 
-Create computed values from your view model state:
+뷰 모델 상태에서 계산된 값을 생성:
 
 ```typescript
 const [state, send] = useComputedViewModel(
@@ -300,18 +300,118 @@ const [state, send] = useComputedViewModel(
   ["firstName", "lastName"]
 );
 
-/* useComputedViewModel returns only the computed values when their dependencies change.
- * In this example, when firstName or lastName changes, the state object will only contain:
+/* useComputedViewModel은 의존성이 변경될 때만 계산된 값을 반환합니다.
+ * 이 예제에서 firstName이나 lastName이 변경될 때 state 객체는 다음만 포함합니다:
  * - state.fullName
- * The computed value fullName will be automatically updated whenever firstName or lastName changes.
+ * 계산된 값 fullName은 firstName이나 lastName이 변경될 때마다 자동으로 업데이트됩니다.
  */
 ```
 
-## Advanced Usage
+## 미들웨어
 
-### Simple Form Example
+x-view-model은 상태 변경을 가로채고 처리할 수 있는 미들웨어 시스템을 제공합니다. 미들웨어는 상태 변경 전후에 특정 작업을 수행하거나, 변경을 검증하거나, 로깅 등을 할 수 있습니다.
 
-Here's a simple form example demonstrating basic state management:
+### 미들웨어 정의
+
+미들웨어는 다음과 같은 형태로 정의됩니다:
+
+```typescript
+type Middleware<T> = (changes: Change[], next: () => void) => void;
+```
+
+- `changes`: 상태 변경 정보를 담은 배열
+- `next`: 다음 미들웨어를 호출하는 함수
+
+### 미들웨어 사용 예시
+
+```typescript
+import { registViewModel } from 'x-view-model';
+import { Change } from 'x-view-model/core/observer';
+
+// 로깅 미들웨어
+const loggingMiddleware = (changes: Change[], next: () => void) => {
+  console.log('State changes:', changes);
+  next();
+};
+
+// 검증 미들웨어
+const validationMiddleware = (changes: Change[], next: () => void) => {
+  const invalidChanges = changes.filter(change => {
+    // 특정 조건에 맞지 않는 변경을 필터링
+    return !isValid(change);
+  });
+  
+  if (invalidChanges.length > 0) {
+    throw new Error('Invalid state changes detected');
+  }
+  
+  next();
+};
+
+// ViewModel 정의
+const counterVM = registViewModel({
+  count: 0,
+  increment() {
+    this.count += 1;
+  }
+}, {
+  name: 'counter',
+  deep: true,
+  middlewares: [loggingMiddleware, validationMiddleware]
+});
+```
+
+### 미들웨어 실행 순서
+
+미들웨어는 등록된 순서대로 실행됩니다. 각 미들웨어는 `next()`를 호출하여 다음 미들웨어로 제어를 넘길 수 있습니다.
+
+```typescript
+const middleware1 = (changes: Change[], next: () => void) => {
+  console.log('Middleware 1: before');
+  next();
+  console.log('Middleware 1: after');
+};
+
+const middleware2 = (changes: Change[], next: () => void) => {
+  console.log('Middleware 2: before');
+  next();
+  console.log('Middleware 2: after');
+};
+
+// 실행 순서:
+// 1. Middleware 1: before
+// 2. Middleware 2: before
+// 3. Middleware 2: after
+// 4. Middleware 1: after
+```
+
+### 미들웨어 사용 사례
+
+1. **로깅 및 디버깅**
+   - 상태 변경 추적
+   - 성능 모니터링
+   - 디버그 정보 수집
+
+2. **검증 및 보안**
+   - 상태 변경 유효성 검사
+   - 접근 제어
+   - 데이터 무결성 검증
+
+3. **상태 동기화**
+   - 다른 시스템과의 상태 동기화
+   - 백엔드 API 호출
+   - 로컬 스토리지 저장
+
+4. **성능 최적화**
+   - 변경 배치 처리
+   - 불필요한 업데이트 필터링
+   - 캐싱 및 메모이제이션
+
+## 고급 사용법
+
+### 간단한 폼 예제
+
+기본적인 상태 관리를 보여주는 간단한 폼 예제입니다:
 
 ```typescript
 type FormState = {
@@ -365,9 +465,9 @@ function FormComponent() {
 }
 ```
 
-### Controller Pattern with Canvas
+### 캔버스와 함께하는 컨트롤러 패턴
 
-This example demonstrates how to use x-view-model with the controller pattern for handling complex DOM manipulations like Canvas:
+이 예제는 Canvas와 같은 복잡한 DOM 조작을 처리하기 위해 컨트롤러 패턴과 함께 x-view-model을 사용하는 방법을 보여줍니다:
 
 ```typescript
 // types/canvas.ts
@@ -533,280 +633,280 @@ const CanvasComponent: React.FC = () => {
 };
 ```
 
-## Performance
+## 성능
 
-x-view-model is optimized for performance:
+x-view-model은 성능에 최적화되어 있습니다:
 
-- **Efficient Updates**: Only re-renders components when their subscribed state changes
-- **Path-based Selection**: Subscribe to specific state paths to minimize re-renders
-- **Memoized Computations**: Computed values are cached and only recomputed when dependencies change
-- **Minimal Overhead**: Small bundle size with zero dependencies
-- **Tree-shakeable**: Only include the code you use
-- **Smart Resource Management**: Automatic disposal of unused view models through reference counting
+- **효율적인 업데이트**: 구독된 상태가 변경될 때만 컴포넌트 리렌더링
+- **경로 기반 선택**: 리렌더링을 최소화하기 위해 특정 상태 경로 구독
+- **메모이제이션된 계산**: 계산된 값은 캐시되며 의존성이 변경될 때만 재계산
+- **최소 오버헤드**: 제로 의존성과 작은 번들 크기
+- **트리 쉐이킹 가능**: 사용하는 코드만 포함
+- **스마트 리소스 관리**: 참조 카운팅을 통한 미사용 뷰 모델의 자동 처리
 
-## Type Safety
+## 타입 안전성
 
-The library provides excellent TypeScript support:
+라이브러리는 우수한 TypeScript 지원을 제공합니다:
 
-- Full type inference for state and methods
-- Path-based type selection
-- Method parameter typing
-- Return value typing
-- Generic type support
+- 상태와 메서드에 대한 완전한 타입 추론
+- 경로 기반 타입 선택
+- 메서드 매개변수 타이핑
+- 반환 값 타이핑
+- 제네릭 타입 지원
 
-## Contributing
+## 기여하기
 
-We welcome contributions! Please feel free to submit a Pull Request.
+기여를 환영합니다! Pull Request를 자유롭게 제출해주세요.
 
-## License
+## 라이선스
 
 ISC © [seokhwan.kim](https://github.com/shk1447)
 
-## Support
+## 지원
 
-- [Documentation](https://shk1447.github.io/x-view-model/docs/introduction/summary)
-- [Issues](https://github.com/shk1447/x-view-model/issues)
-- [Discussions](https://github.com/shk1447/x-view-model/discussions)
+- [문서](https://shk1447.github.io/x-view-model/docs/introduction/summary)
+- [이슈](https://github.com/shk1447/x-view-model/issues)
+- [토론](https://github.com/shk1447/x-view-model/discussions)
 
-## FAQ
+## 자주 묻는 질문
 
-### General Questions
+### 일반적인 질문
 
-#### Q: What's the difference between View Model and regular React state management?
+#### Q: 뷰 모델과 일반적인 React 상태 관리의 차이점은 무엇인가요?
 
-A: View Model provides a structured way to manage state and business logic using the MVVM pattern. Unlike regular React state, it:
+A: 뷰 모델은 MVVM 패턴을 사용하여 상태와 비즈니스 로직을 관리하는 구조화된 방법을 제공합니다. 일반적인 React 상태와 달리:
 
-- Separates business logic from UI components
-- Provides type-safe state management
-- Enables efficient updates through path-based subscriptions
-- Supports computed properties and async operations
+- 비즈니스 로직을 UI 컴포넌트와 분리
+- 타입 안전한 상태 관리 제공
+- 경로 기반 구독을 통한 효율적인 업데이트 지원
+- 계산된 속성과 비동기 작업 지원
 
-#### Q: Why use the MVVM pattern?
+#### Q: MVVM 패턴을 사용하는 이유는 무엇인가요?
 
-A: MVVM pattern offers several benefits:
+A: MVVM 패턴은 다음과 같은 이점을 제공합니다:
 
-- Clear separation of concerns between view and business logic
-- Better testability of business logic
-- More maintainable and scalable code structure
-- Easier state management in complex applications
+- 뷰와 비즈니스 로직 간의 명확한 관심사 분리
+- 비즈니스 로직의 더 나은 테스트 가능성
+- 더 유지보수 가능하고 확장 가능한 코드 구조
+- 복잡한 애플리케이션에서 더 쉬운 상태 관리
 
-#### Q: Why choose x-view-model over Redux or MobX?
+#### Q: Redux나 MobX 대신 x-view-model을 선택하는 이유는 무엇인가요?
 
-A: x-view-model offers:
+A: x-view-model은 다음을 제공합니다:
 
-- Simpler API with less boilerplate
-- Better TypeScript support out of the box
-- Smaller bundle size
-- More intuitive state management
-- Better performance through optimized updates
+- 더 간단한 API와 더 적은 보일러플레이트
+- 기본적으로 더 나은 TypeScript 지원
+- 더 작은 번들 크기
+- 더 직관적인 상태 관리
+- 최적화된 업데이트를 통한 더 나은 성능
 
-### Performance
+### 성능
 
-#### Q: How does it perform in production?
+#### Q: 프로덕션에서 성능은 어떠한가요?
 
-A: x-view-model is optimized for production use:
+A: x-view-model은 프로덕션 사용에 최적화되어 있습니다:
 
-- Efficient updates with minimal re-renders
-- Small bundle size (~13.5KB minified)
-- Zero dependencies for better performance
-- Optimized for both small and large applications
+- 최소한의 리렌더링으로 효율적인 업데이트
+- 작은 번들 크기 (~13.5KB 압축)
+- 더 나은 성능을 위한 제로 의존성
+- 작은 애플리케이션과 큰 애플리케이션 모두에 최적화
 
-#### Q: Does it work well with large applications?
+#### Q: 대규모 애플리케이션에서 잘 작동하나요?
 
-A: Yes, x-view-model is designed to scale:
+A: 네, x-view-model은 확장을 위해 설계되었습니다:
 
-- Path-based state selection for efficient updates
-- Computed properties for derived state
-- Modular architecture for better code organization
-- Type-safe state management for better maintainability
+- 효율적인 업데이트를 위한 경로 기반 상태 선택
+- 파생 상태를 위한 계산된 속성
+- 더 나은 코드 구성을 위한 모듈식 아키텍처
+- 더 나은 유지보수성을 위한 타입 안전한 상태 관리
 
-#### Q: What about memory usage?
+#### Q: 메모리 사용량은 어떠한가요?
 
-A: Memory usage is optimized through:
+A: 메모리 사용량은 다음을 통해 최적화됩니다:
 
-- Efficient state updates
-- Smart garbage collection
-- Minimal overhead in state management
-- No unnecessary re-renders
+- 효율적인 상태 업데이트
+- 스마트 가비지 컬렉션
+- 상태 관리에서 최소한의 오버헤드
+- 불필요한 리렌더링 없음
 
 ### TypeScript
 
-#### Q: Can I use it without TypeScript?
+#### Q: TypeScript 없이 사용할 수 있나요?
 
-A: Yes, x-view-model works with plain JavaScript, but you'll miss out on:
+A: 네, x-view-model은 일반 JavaScript에서도 작동하지만 다음을 놓치게 됩니다:
 
-- Type safety
-- Better IDE support
-- Easier refactoring
-- Better documentation through types
+- 타입 안전성
+- 더 나은 IDE 지원
+- 더 쉬운 리팩토링
+- 타입을 통한 더 나은 문서화
 
-#### Q: How to handle complex type definitions?
+#### Q: 복잡한 타입 정의는 어떻게 처리하나요?
 
-A: For complex types:
+A: 복잡한 타입의 경우:
 
-- Use type aliases for better readability
-- Leverage TypeScript's utility types
-- Break down complex types into smaller interfaces
-- Use generics for reusable components
+- 가독성을 위한 타입 별칭 사용
+- TypeScript의 유틸리티 타입 활용
+- 복잡한 타입을 더 작은 인터페이스로 분해
+- 재사용 가능한 컴포넌트에 제네릭 사용
 
-#### Q: Any tips for using generic types?
+#### Q: 제네릭 타입 사용에 대한 팁이 있나요?
 
-A: When using generics:
+A: 제네릭을 사용할 때:
 
-- Define clear type constraints
-- Use type inference when possible
-- Document generic type parameters
-- Test with different type parameters
+- 명확한 타입 제약 조건 정의
+- 가능할 때 타입 추론 사용
+- 제네릭 타입 매개변수 문서화
+- 다른 타입 매개변수로 테스트
 
-### State Management
+### 상태 관리
 
-#### Q: How to distinguish between global and local state?
+#### Q: 전역 상태와 지역 상태를 어떻게 구분하나요?
 
-A: Best practices:
+A: 모범 사례:
 
-- Use global state for shared data
-- Use local state for component-specific data
-- Consider using multiple view models for different concerns
-- Use path-based selection for efficient updates
+- 공유 데이터에는 전역 상태 사용
+- 컴포넌트별 데이터에는 지역 상태 사용
+- 다른 관심사에 대해 여러 뷰 모델 사용 고려
+- 효율적인 업데이트를 위한 경로 기반 선택 사용
 
-#### Q: How to optimize frequent state updates?
+#### Q: 빈번한 상태 업데이트를 어떻게 최적화하나요?
 
-A: Optimization strategies:
+A: 최적화 전략:
 
-- Use path-based selection
-- Implement debouncing for rapid updates
-- Use computed properties for derived state
-- Consider batching updates
+- 경로 기반 선택 사용
+- 빠른 업데이트에 디바운싱 구현
+- 파생 상태에 계산된 속성 사용
+- 업데이트 배치 고려
 
-#### Q: How to efficiently manage nested state?
+#### Q: 중첩된 상태를 어떻게 효율적으로 관리하나요?
 
-A: For nested state:
+A: 중첩된 상태의 경우:
 
-- Use path-based selection
-- Implement proper type definitions
-- Use computed properties for derived values
-- Consider flattening deeply nested state
+- 경로 기반 선택 사용
+- 적절한 타입 정의 구현
+- 파생 값에 계산된 속성 사용
+- 깊게 중첩된 상태를 평탄화하는 것 고려
 
-### Async Operations
+### 비동기 작업
 
-#### Q: What's the best way to handle async operations?
+#### Q: 비동기 작업을 처리하는 가장 좋은 방법은 무엇인가요?
 
-A: Recommended approaches:
+A: 권장 접근 방식:
 
-- Use the `send` function with async flag
-- Implement proper error handling
-- Use loading states for better UX
-- Consider using async/await for cleaner code
+- async 플래그와 함께 `send` 함수 사용
+- 적절한 오류 처리 구현
+- 더 나은 UX를 위한 로딩 상태 사용
+- 더 깔끔한 코드를 위해 async/await 사용 고려
 
-#### Q: How to handle errors?
+#### Q: 오류는 어떻게 처리하나요?
 
-A: Error handling best practices:
+A: 오류 처리 모범 사례:
 
-- Use try/catch blocks
-- Implement proper error boundaries
-- Provide meaningful error messages
-- Consider using error states in your view model
+- try/catch 블록 사용
+- 적절한 오류 경계 구현
+- 의미 있는 오류 메시지 제공
+- 뷰 모델에서 오류 상태 사용 고려
 
-#### Q: How to manage loading states?
+#### Q: 로딩 상태는 어떻게 관리하나요?
 
-A: Loading state management:
+A: 로딩 상태 관리:
 
-- Use boolean flags in your state
-- Implement loading indicators
-- Consider using a loading queue
-- Handle loading states in your UI components
+- 상태에서 불리언 플래그 사용
+- 로딩 표시기 구현
+- 로딩 큐 사용 고려
+- UI 컴포넌트에서 로딩 상태 처리
 
-### Testing
+### 테스트
 
-#### Q: How to test View Models?
+#### Q: 뷰 모델을 어떻게 테스트하나요?
 
-A: Testing strategies:
+A: 테스트 전략:
 
-- Unit test business logic
-- Mock dependencies
-- Test state updates
-- Verify computed properties
-- Test async operations
+- 비즈니스 로직 단위 테스트
+- 의존성 모킹
+- 상태 업데이트 검증
+- 계산된 속성 확인
+- 비동기 작업 테스트
 
-#### Q: How to set up the testing environment?
+#### Q: 테스트 환경을 어떻게 설정하나요?
 
-A: Testing setup:
+A: 테스트 설정:
 
-- Use Jest or your preferred testing framework
-- Mock React dependencies
-- Set up proper TypeScript configuration
-- Implement test utilities
+- Jest 또는 선호하는 테스트 프레임워크 사용
+- React 의존성 모킹
+- 적절한 TypeScript 구성 설정
+- 테스트 유틸리티 구현
 
-#### Q: How to handle mocking?
+#### Q: 모킹은 어떻게 처리하나요?
 
-A: Mocking approaches:
+A: 모킹 접근 방식:
 
-- Mock external dependencies
-- Use dependency injection
-- Implement proper test fixtures
-- Consider using test factories
+- 외부 의존성 모킹
+- 의존성 주입 사용
+- 적절한 테스트 픽스처 구현
+- 테스트 팩토리 사용 고려
 
-### Migration
+### 마이그레이션
 
-#### Q: How to migrate from Redux?
+#### Q: Redux에서 어떻게 마이그레이션하나요?
 
-A: Migration steps:
+A: 마이그레이션 단계:
 
-1. Identify Redux store slices
-2. Create corresponding view models
-3. Gradually replace Redux usage
-4. Update components to use view models
-5. Remove Redux dependencies
+1. Redux 스토어 슬라이스 식별
+2. 해당 뷰 모델 생성
+3. Redux 사용을 점진적으로 교체
+4. 컴포넌트를 뷰 모델 사용으로 업데이트
+5. Redux 의존성 제거
 
-#### Q: How to refactor existing code?
+#### Q: 기존 코드를 어떻게 리팩토링하나요?
 
-A: Refactoring approach:
+A: 리팩토링 접근 방식:
 
-1. Start with small, isolated components
-2. Create view models for business logic
-3. Update components to use view models
-4. Test thoroughly after each change
-5. Gradually expand the refactoring
+1. 작고 격리된 컴포넌트로 시작
+2. 비즈니스 로직에 대한 뷰 모델 생성
+3. 컴포넌트를 뷰 모델 사용으로 업데이트
+4. 각 변경 후 철저히 테스트
+5. 리팩토링을 점진적으로 확장
 
-#### Q: Is incremental migration possible?
+#### Q: 점진적 마이그레이션이 가능한가요?
 
-A: Yes, x-view-model supports:
+A: 네, x-view-model은 다음을 지원합니다:
 
-- Gradual adoption
-- Coexistence with other state management
-- Step-by-step migration
-- Parallel usage during transition
+- 점진적 채택
+- 다른 상태 관리와의 공존
+- 단계별 마이그레이션
+- 전환 기간 동안 병렬 사용
 
-### Community
+### 커뮤니티
 
-#### Q: Where can I get help?
+#### Q: 어디서 도움을 받을 수 있나요?
 
-A: Support channels:
+A: 지원 채널:
 
-- GitHub Issues
-- GitHub Discussions
-- Documentation
-- Community forums
+- GitHub 이슈
+- GitHub 토론
+- 문서
+- 커뮤니티 포럼
 
-#### Q: How can I contribute?
+#### Q: 어떻게 기여할 수 있나요?
 
-A: Contribution options:
+A: 기여 옵션:
 
-- Report bugs
-- Suggest features
-- Improve documentation
-- Submit pull requests
-- Share examples
+- 버그 보고
+- 기능 제안
+- 문서 개선
+- Pull Request 제출
+- 예제 공유
 
-#### Q: What to do when finding a bug?
+#### Q: 버그를 발견하면 어떻게 해야 하나요?
 
-A: Bug reporting steps:
+A: 버그 보고 단계:
 
-1. Check existing issues
-2. Create a minimal reproduction
-3. Provide detailed information
-4. Submit a bug report
+1. 기존 이슈 확인
+2. 최소 재현 생성
+3. 자세한 정보 제공
+4. 버그 보고서 제출
 
 ---
 
-Made with ❤️ by [seokhwan.kim](https://github.com/shk1447)
+[seokhwan.kim](https://github.com/shk1447)이 만든 ❤️

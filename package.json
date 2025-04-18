@@ -1,7 +1,8 @@
 {
   "name": "x-view-model",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A lightweight, type-safe MVVM state management solution for React applications. Features reactive updates, computed properties, and deep path selection with minimal bundle size.",
+  "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
   "types": "lib/index.d.ts",
@@ -9,7 +10,8 @@
     "xvm": "./dist/bin/xvm.js"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -53,21 +55,24 @@
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "rollup": "^2.79.1",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/commander": "^2.12.2",
     "@types/fs-extra": "^11.0.4",
+    "@types/jest": "^29.5.14",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.17",
     "@types/react": "^18.0.26",
-    "typescript": "^4.9.4",
-    "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4",
+    "jest": "^29.7.0",
+    "rollup": "^2.79.1",
     "rollup-plugin-dts": "^4.2.3",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.32.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "ts-jest": "^29.3.2",
+    "typescript": "^4.9.4",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   }
 }
