@@ -6,7 +6,7 @@ import {
   GetFunctionReturn,
 } from "../types";
 import { EventHandler } from "./EventHandler";
-import { NameSpacesHandler } from "./NameSpacesHandler";
+
 import { ServiceHandler } from "./ServiceHandler";
 
 export type Middleware<T> = (
@@ -24,7 +24,7 @@ export type PropertyHandlerOptions = {
 
 export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private _property: R;
-  private _observable: R;
+  private _observable: Observable & R;
   private _reference: number;
   private _started: boolean;
   private _options?: PropertyHandlerOptions;
@@ -32,7 +32,6 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
 
   public services: ServiceHandler<R>;
 
-  public namespaces: NameSpacesHandler;
   constructor(init_property: R, options?: PropertyHandlerOptions) {
     super();
     this._property = init_property;
@@ -41,7 +40,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._observable = Observable.from({ ...this._property }, { async: true });
     this._started = false;
     this.services = new ServiceHandler<R>(this);
-    this.namespaces = NameSpacesHandler.getInstance();
+
     this.middlewares = options?.middlewares || [];
   }
 
@@ -91,10 +90,8 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private set reference(val: number) {
     this._reference = val;
     if (this._reference > 0) {
-      if (this.name) this.namespaces.addNamespace<R>(this.name, this);
       this.start();
     } else {
-      if (this.name) this.namespaces.removeNamespace(this.name);
       this.stop();
     }
   }

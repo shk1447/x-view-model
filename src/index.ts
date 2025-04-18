@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import {
   PropertyHandler,
   PropertyHandlerOptions,
@@ -21,7 +21,7 @@ export type DataModel<T> = T extends (
 
 export type ViewModel<T, R> = {
   context: PropertyHandler<T>;
-  ref: R;
+  ref?: R;
 };
 
 export const registViewModel = <T, R = unknown>(
@@ -53,9 +53,14 @@ export const useViewModel = <T, R>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R
+  R | undefined
 ] => {
-  const state = useInterfaceHandle(keys, vm.context);
+  const componentId = useRef<string>(`${Date.now()}-${Math.random()}`).current;
+  const componentName = useRef<string>(
+    new Error().stack?.split("\n")[2]?.trim()?.split(" ")[1] || "Unknown"
+  ).current;
+
+  const state = useInterfaceHandle(keys as any, vm.context);
 
   const send = async <K extends GetFunctionKeys<T>>(
     name: K,
@@ -115,6 +120,7 @@ type FastPickByPath<T, K extends GetDotKeysImpl<T>> = UnionToIntersection<
       : never;
   }[K & string]
 >;
+
 export const useComputedViewModel = <T, R, S>(
   vm: ViewModel<T, R>,
   selector: (state: T) => S,
@@ -130,7 +136,7 @@ export const useComputedViewModel = <T, R, S>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R
+  R | undefined
 ] => {
   const [state, send, controller] = useViewModel(vm, keys);
   const selectedState = useMemo(() => selector(state), [state, selector]);
@@ -138,7 +144,6 @@ export const useComputedViewModel = <T, R, S>(
   return [selectedState, send, controller];
 };
 
-// src/core/hooks/useMemoizedViewModel.ts
 export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
   vm: ViewModel<T, R>,
   keys?: K[]
@@ -153,7 +158,7 @@ export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R
+  R | undefined
 ] => {
   const [fullState, send, ref] = useViewModel(vm, keys as any);
 
