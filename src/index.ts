@@ -10,7 +10,6 @@ import {
   GetFunctionParams,
   GetFunctionReturn,
 } from "./core/types";
-import { get, set } from "./core/utils/objectPath";
 
 export * from "./core/handler/PropertyHandler";
 

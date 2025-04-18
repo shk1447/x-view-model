@@ -1,4 +1,3 @@
-import { ViewModel } from "../..";
 import { PropertyHandler } from "./PropertyHandler";
 
 export class NameSpacesHandler {
