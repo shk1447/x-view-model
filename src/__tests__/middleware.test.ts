@@ -16,15 +16,27 @@ describe("Middleware Test", () => {
     const executionOrder: string[] = [];
 
     // 미들웨어 정의
-    const middleware1 = (changes: Change[], next: () => void) => {
-      console.log(changes);
+    const middleware1 = (
+      changes: Change[],
+      next: () => void,
+      state: CounterContext
+    ) => {
+      console.log("Middleware 1: before");
+
       executionOrder.push("middleware1");
       next();
+      console.log("Middleware 1: after");
     };
 
-    const middleware2 = (changes: Change[], next: () => void) => {
+    const middleware2 = (
+      changes: Change[],
+      next: () => void,
+      state: CounterContext
+    ) => {
+      console.log("Middleware 2: before");
       executionOrder.push("middleware2");
       next();
+      console.log("Middleware 2: after");
     };
 
     // ViewModel 정의

@@ -25,8 +25,7 @@ export class EventHandler<K> {
 
     return this;
   };
-
-  callEmitFromMT = function callEmitFromMT() {
+  callEmitFromMT = function callEmitFromMT(this: { func: Function; args: any[] }) {
     this.func.apply(null, this.args ? this.args : []);
   };
 

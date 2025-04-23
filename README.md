@@ -307,6 +307,132 @@ const [state, send] = useComputedViewModel(
  */
 ```
 
+### 히스토리 기능
+
+x-view-model은 `send` 메소드를 통한 모든 메소드 호출에 대한 히스토리를 기록하고 관리하는 기능을 제공합니다. 이를 통해 모든 상태 변경 메소드의 호출을 추적하고 모니터링할 수 있습니다:
+
+```typescript
+// 히스토리 핸들러 정의
+const counterVM = registViewModel<CounterContext>(
+  {
+    count: 0,
+    increment() {
+      this.count += 1;
+      return this.count;
+    },
+    decrement() {
+      this.count -= 1;
+      return this.count;
+    }
+  },
+  {
+    name: "counter",
+    deep: true,
+    history: {
+      handler: (history, state) => {
+        // send 메소드를 통한 호출 기록 처리
+        console.log('Method called via send:', {
+          name: history.name,      // 호출된 메소드 이름
+          payload: history.payload, // send 메소드에 전달된 인자
+          result: history.result,   // 메소드의 반환값
+          error: history.error,     // 에러 발생 시
+          timestamp: history.timestamp // 호출 시간
+        });
+      },
+      maxSize: 100 // 최대 히스토리 저장 개수 (선택적)
+    }
+  }
+);
+
+// 사용 예시
+const [state, send] = useViewModel(counterVM, ["count"]);
+
+// 이 send 호출들이 히스토리에 기록됩니다
+await send("increment", undefined, true);  // history에 기록
+await send("decrement", undefined, true);  // history에 기록
+```
+
+#### 히스토리 기능의 주요 특징
+
+1. **send 메소드 호출 추적**
+   - `send` 메소드를 통한 모든 메소드 호출 기록
+   - 호출된 메소드 이름, 전달된 인자, 결과값, 시간 기록
+   - 에러 발생 시 에러 정보도 기록
+
+2. **커스텀 핸들러**
+   - 히스토리 이벤트를 자유롭게 처리할 수 있는 핸들러 제공
+   - 외부 로깅 시스템 연동 가능
+   - 상태 변화 추적 가능
+
+3. **히스토리 크기 관리**
+   - `maxSize` 옵션으로 히스토리 저장 개수 제한
+   - 메모리 사용량 최적화
+
+4. **히스토리 조회 및 관리**
+   ```typescript
+   // 히스토리 조회
+   const history = counterVM.context.getSendHistory();
+   
+   // 히스토리 초기화
+   counterVM.context.clearSendHistory();
+   ```
+
+#### 활용 예시
+
+```typescript
+// 디버깅을 위한 히스토리 로깅
+const vm = registViewModel<UserContext>(
+  {
+    // ... state and methods
+  },
+  {
+    name: "user",
+    deep: true,
+    history: {
+      handler: (history, state) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[${new Date(history.timestamp).toISOString()}]`, {
+            method: history.name,
+            payload: history.payload,
+            result: history.result
+          });
+        }
+      }
+    }
+  }
+);
+
+// 외부 모니터링 서비스 연동
+const vm = registViewModel<PaymentContext>(
+  {
+    // ... state and methods
+  },
+  {
+    name: "payment",
+    deep: true,
+    history: {
+      handler: async (history, state) => {
+        if (history.error) {
+          await sendToErrorTracking({
+            method: history.name,
+            error: history.error,
+            state: state
+          });
+        }
+      },
+      maxSize: 50
+    }
+  }
+);
+```
+
+이 기능은 다음과 같은 상황에서 특히 유용합니다:
+- 디버깅 및 문제 해결
+- 사용자 행동 분석
+- 에러 추적 및 모니터링
+- 상태 변화 감사(audit) 로깅
+- 실행 취소/다시 실행 기능 구현
+
 ## 미들웨어
 
 x-view-model은 상태 변경을 가로채고 처리할 수 있는 미들웨어 시스템을 제공합니다. 미들웨어는 상태 변경 전후에 특정 작업을 수행하거나, 변경을 검증하거나, 로깅 등을 할 수 있습니다.

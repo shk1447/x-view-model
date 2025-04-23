@@ -26,7 +26,7 @@ export type ViewModel<T, R> = {
 
 export const registViewModel = <T, R = unknown>(
   data: T,
-  options?: PropertyHandlerOptions,
+  options?: PropertyHandlerOptions<T>,
   ref?: R
 ): ViewModel<T, R> => {
   const handler = new PropertyHandler<T>(data, options);
@@ -62,32 +62,7 @@ export const useViewModel = <T, R>(
 
   const state = useInterfaceHandle(keys as any, vm.context);
 
-  const send = async <K extends GetFunctionKeys<T>>(
-    name: K,
-    payload: GetFunctionParams<T>[K],
-    async: boolean = false
-  ): Promise<
-    GetFunctionReturn<T>[K] extends Promise<infer U>
-      ? U
-      : GetFunctionReturn<T>[K]
-  > => {
-    if (async) {
-      try {
-        const res = await (vm.context.property[name] as any).apply(
-          vm.context.state,
-          [payload]
-        );
-        return res;
-      } catch (error) {
-        throw error;
-      }
-    } else {
-      vm.context.services.emit(name, [payload]);
-      return undefined as any;
-    }
-  };
-
-  return [state, send, vm.ref];
+  return [state, vm.context.send, vm.ref];
 };
 
 // GetDotKeysImpl 타입 (기존 것 유지)

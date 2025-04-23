@@ -9,17 +9,40 @@ import { EventHandler } from "./EventHandler";
 
 import { ServiceHandler } from "./ServiceHandler";
 
+// SendHistory 타입 정의 추가
+export type SendHistory = {
+  name: string;
+  payload: any;
+  timestamp: number;
+  result?: any;
+  error?: Error;
+};
+
 export type Middleware<T> = (
   changes: Change[],
   next: () => void,
   state: T
 ) => void | Promise<void>;
 
-export type PropertyHandlerOptions = {
+// 히스토리 핸들러 타입 정의
+export type HistoryHandler<T> = (
+  history: SendHistory,
+  state: T
+) => void | Promise<void>;
+
+// 히스토리 옵션 타입 정의
+export type HistoryOptions<T> = {
+  handler?: HistoryHandler<T>;
+  maxSize?: number;
+};
+
+// PropertyHandlerOptions 확장
+export type PropertyHandlerOptions<T> = {
   name: string;
   // 하위 데이터 변경시 이벤트가 발생됩니다.
   deep: boolean;
-  middlewares?: Middleware<any>[];
+  middlewares?: Middleware<T>[];
+  history?: HistoryOptions<T>;
 };
 
 export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
@@ -27,12 +50,15 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private _observable: Observable & R;
   private _reference: number;
   private _started: boolean;
-  private _options?: PropertyHandlerOptions;
+  private _options?: PropertyHandlerOptions<R>;
   private middlewares: Middleware<R>[] = [];
+  private _sendHistory: SendHistory[] = [];
+  private _historyHandler: HistoryHandler<R>;
+  private _historyMaxSize: number;
 
   public services: ServiceHandler<R>;
 
-  constructor(init_property: R, options?: PropertyHandlerOptions) {
+  constructor(init_property: R, options?: PropertyHandlerOptions<R>) {
     super();
     this._property = init_property;
     this._options = options;
@@ -40,6 +66,10 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._observable = Observable.from({ ...this._property }, { async: true });
     this._started = false;
     this.services = new ServiceHandler<R>(this);
+
+    // 히스토리 설정 초기화
+    this._historyHandler = options?.history?.handler || (() => {});
+    this._historyMaxSize = options?.history?.maxSize || 100;
 
     this.middlewares = options?.middlewares || [];
   }
@@ -192,6 +222,22 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     return this;
   }
 
+  // 히스토리 추가 메소드
+  private async addHistory(history: SendHistory): Promise<void> {
+    // 히스토리 핸들러가 있다면 실행
+    if (this._historyHandler) {
+      await Promise.resolve(this._historyHandler(history, this.state));
+    }
+
+    // 히스토리 저장
+    this._sendHistory.push(history);
+
+    // maxSize 제한 처리
+    if (this._sendHistory.length > this._historyMaxSize) {
+      this._sendHistory = this._sendHistory.slice(-this._historyMaxSize);
+    }
+  }
+
   public async send<K extends GetFunctionKeys<R>>(
     name: K,
     payload: GetFunctionParams<R>[K],
@@ -201,19 +247,39 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
       ? U
       : GetFunctionReturn<R>[K]
   > {
+    const history: SendHistory = {
+      name: name as string,
+      payload,
+      timestamp: Date.now(),
+    };
+
     if (async) {
       try {
         const res = await (this.property[name] as any).apply(this.state, [
           payload,
         ]);
-
+        history.result = res;
+        await this.addHistory(history);
         return res;
       } catch (error) {
+        history.error = error as Error;
+        await this.addHistory(history);
         throw error;
       }
     } else {
       this.services.emit(name, [payload]);
+      await this.addHistory(history);
       return undefined as any;
     }
+  }
+
+  // 히스토리 조회 메소드
+  public getSendHistory(): SendHistory[] {
+    return this._sendHistory;
+  }
+
+  // 히스토리 클리어 메소드
+  public clearSendHistory(): void {
+    this._sendHistory = [];
   }
 }
