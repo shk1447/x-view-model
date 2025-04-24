@@ -11,6 +11,8 @@ import {
   GetFunctionReturn,
 } from "./core/types";
 
+import { DevToolsHandler } from "./core/handler/DevToolsHandler";
+
 export * from "./core/handler/PropertyHandler";
 
 export type DataModel<T> = T extends (
@@ -21,10 +23,12 @@ export type DataModel<T> = T extends (
 
 export type ViewModel<T, R> = {
   context: PropertyHandler<T>;
-  ref?: R;
+  ref: R;
 };
 
-export const registViewModel = <T, R = unknown>(
+export const devTools = new DevToolsHandler();
+
+export const registViewModel = <T, R = undefined>(
   data: T,
   options?: PropertyHandlerOptions<T>,
   ref?: R
@@ -33,15 +37,59 @@ export const registViewModel = <T, R = unknown>(
 
   const vm = {
     context: handler,
-    ref: ref,
+    ref: ref ? ref : (undefined as R),
   };
 
   return vm;
 };
 
+const getComponentName = () => {
+  if (process.env.NODE_ENV !== "development") {
+    return "Unknown";
+  }
+  try {
+    throw new Error();
+  } catch (error) {
+    if (!(error instanceof Error)) {
+      return "Unknown";
+    }
+
+    const stack = error.stack || "";
+    const stackLines = stack.split("\n");
+
+    // 더 복잡한 정규식으로 다양한 패턴 처리
+    const componentPatterns = [
+      /at ([A-Z][A-Za-z0-9_$]*) \(/, // 일반 함수 컴포넌트
+      /at ([A-Z][A-Za-z0-9_$]*)\s/, // 화살표 함수 컴포넌트
+      /\.(jsx|tsx|js|ts):(\d+).*\s([A-Z][A-Za-z0-9_$]*)/, // 파일명에서 추출
+    ];
+
+    for (let i = 2; i < Math.min(stackLines.length, 8); i++) {
+      const line = stackLines[i];
+      for (const pattern of componentPatterns) {
+        const match = line.match(pattern);
+        if (match && match[1]) {
+          return match[1];
+        }
+      }
+    }
+
+    // 파일명에서 컴포넌트 이름 추출 시도
+    const fileNameMatch = stack.match(
+      /\/([A-Z][A-Za-z0-9_$]*)\.(jsx|tsx|js|ts)/
+    );
+    if (fileNameMatch && fileNameMatch[1]) {
+      return fileNameMatch[1];
+    }
+
+    return "Anonymous";
+  }
+};
+
 export const useViewModel = <T, R>(
   vm: ViewModel<T, R>,
-  keys?: GetDotKeys<T>[]
+  keys?: GetDotKeys<T>[],
+  componentName?: string
 ): [
   T,
   <K extends GetFunctionKeys<T>>(
@@ -53,16 +101,24 @@ export const useViewModel = <T, R>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R | undefined
+  R
 ] => {
-  const componentId = useRef<string>(`${Date.now()}-${Math.random()}`).current;
-  const componentName = useRef<string>(
-    new Error().stack?.split("\n")[2]?.trim()?.split(" ")[1] || "Unknown"
-  ).current;
+  if (!componentName) {
+    componentName = useMemo(() => {
+      return getComponentName();
+    }, []);
+  }
+  devTools.registerComponent(vm.context, componentName);
 
   const state = useInterfaceHandle(keys as any, vm.context);
 
-  return [state, vm.context.send, vm.ref];
+  return [
+    state,
+    vm.context.send.bind(
+      Object.assign(vm.context, { _componentName: componentName })
+    ),
+    vm.ref,
+  ];
 };
 
 // GetDotKeysImpl 타입 (기존 것 유지)
@@ -111,9 +167,12 @@ export const useComputedViewModel = <T, R, S>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R | undefined
+  R
 ] => {
-  const [state, send, controller] = useViewModel(vm, keys);
+  const compName = useMemo(() => {
+    return getComponentName();
+  }, []);
+  const [state, send, controller] = useViewModel(vm, keys, compName);
   const selectedState = useMemo(() => selector(state), [state, selector]);
 
   return [selectedState, send, controller];
@@ -133,9 +192,12 @@ export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
       ? U
       : GetFunctionReturn<T>[K]
   >,
-  R | undefined
+  R
 ] => {
-  const [fullState, send, ref] = useViewModel(vm, keys as any);
+  const compName = useMemo(() => {
+    return getComponentName();
+  }, []);
+  const [fullState, send, ref] = useViewModel(vm, keys as any, compName);
 
   return [fullState, send, ref] as any;
 };

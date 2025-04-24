@@ -82,6 +82,12 @@ type GetFunctionReturn<T> = {
     [K in keyof T]: T[K] extends (args: any) => any ? ReturnType<T[K]> : void;
 };
 
+declare class DevToolsHandler {
+    private state;
+    constructor();
+    registerComponent(context: PropertyHandler<any>, componentName: string): void;
+}
+
 declare class EventHandler<K> {
     private handlers;
     constructor();
@@ -101,6 +107,7 @@ declare class ServiceHandler<R> extends EventHandler<string> {
 
 type SendHistory = {
     name: string;
+    componentName: string;
     payload: any;
     timestamp: number;
     result?: any;
@@ -128,8 +135,10 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private _sendHistory;
     private _historyHandler;
     private _historyMaxSize;
+    private _componentName;
     services: ServiceHandler<R>;
-    constructor(init_property: R, options?: PropertyHandlerOptions<R>);
+    private devTools?;
+    constructor(init_property: R, options?: PropertyHandlerOptions<R>, devTools?: DevToolsHandler);
     use(middleware: Middleware<R>): this;
     private executeMiddlewares;
     get state(): Observable & R;
@@ -156,15 +165,16 @@ declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
 type DataModel<T> = T extends (...args: never[]) => Promise<infer Response> ? Response : never;
 type ViewModel<T, R> = {
     context: PropertyHandler<T>;
-    ref?: R;
+    ref: R;
 };
-declare const registViewModel: <T, R = unknown>(data: T, options?: PropertyHandlerOptions<T> | undefined, ref?: R | undefined) => ViewModel<T, R>;
-declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[] | undefined) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R | undefined];
+declare const devTools: DevToolsHandler;
+declare const registViewModel: <T, R = undefined>(data: T, options?: PropertyHandlerOptions<T> | undefined, ref?: R | undefined) => ViewModel<T, R>;
+declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[] | undefined, componentName?: string) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
 type GetDotKeysImpl<T> = T extends object ? {
     [K in keyof T & (string | number)]: T[K] extends object ? K | `${K}.${GetDotKeysImpl<T[K]>}` : K;
 }[keyof T & (string | number)] : never;
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-declare const useComputedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[] | undefined) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R | undefined];
-declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>>(vm: ViewModel<T, R>, keys?: K[] | undefined) => [UnionToIntersection<{ [P in K & string]: P extends keyof T ? { [Key in P]: T[Key]; } : P extends `${infer A}.${infer B}` ? A extends keyof T ? B extends keyof T[A] ? { [Key_1 in A]: { [SubKey in B]: T[A][SubKey]; }; } : never : never : never; }[K & string]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], async?: boolean) => Promise<GetFunctionReturn<T>[K_1] extends Promise<infer U> ? U : GetFunctionReturn<T>[K_1]>, R | undefined];
+declare const useComputedViewModel: <T, R, S>(vm: ViewModel<T, R>, selector: (state: T) => S, keys?: GetDotKeys<T>[] | undefined) => [S, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
+declare const useMemoizedViewModel: <T, R, K extends GetDotKeysImpl<T>>(vm: ViewModel<T, R>, keys?: K[] | undefined) => [UnionToIntersection<{ [P in K & string]: P extends keyof T ? { [Key in P]: T[Key]; } : P extends `${infer A}.${infer B}` ? A extends keyof T ? B extends keyof T[A] ? { [Key_1 in A]: { [SubKey in B]: T[A][SubKey]; }; } : never : never : never; }[K & string]>, <K_1 extends GetFunctionKeys<T>>(name: K_1, payload: GetFunctionParams<T>[K_1], async?: boolean) => Promise<GetFunctionReturn<T>[K_1] extends Promise<infer U> ? U : GetFunctionReturn<T>[K_1]>, R];
 
-export { DataModel, HistoryHandler, HistoryOptions, Middleware, PropertyHandler, PropertyHandlerOptions, SendHistory, ViewModel, registViewModel, useComputedViewModel, useMemoizedViewModel, useViewModel };
+export { DataModel, HistoryHandler, HistoryOptions, Middleware, PropertyHandler, PropertyHandlerOptions, SendHistory, ViewModel, devTools, registViewModel, useComputedViewModel, useMemoizedViewModel, useViewModel };

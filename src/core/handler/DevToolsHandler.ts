@@ -1,9 +1,12 @@
-import { Change } from '../observer';
+import { Change } from "../observer";
+import { PropertyHandler } from "./PropertyHandler";
+
+export type ComponentState = {
+  enabled: boolean;
+};
 
 export interface DevToolsState {
-  components: Set<string>;
-  history: Array<{ type: string; payload: any }>;
-  updates: number;
+  components: Map<PropertyHandler<any>, Record<string, ComponentState>>;
 }
 
 export class DevToolsHandler {
@@ -11,51 +14,26 @@ export class DevToolsHandler {
 
   constructor() {
     this.state = {
-      components: new Set(),
-      history: [],
-      updates: 0
+      components: new Map(),
     };
   }
 
   // 컴포넌트 등록
-  registerComponent(componentId: string) {
-    this.state.components.add(componentId);
-    this.state.history.push({
-      type: 'componentRegistered',
-      payload: { componentId }
-    });
+  registerComponent(context: PropertyHandler<any>, componentName: string) {
+    if (this.state.components.has(context)) {
+      const components = this.state.components.get(context);
+      if (components && !components[componentName]) {
+        components[componentName] = {
+          enabled: false,
+        };
+      }
+    } else {
+      const compState: Record<string, ComponentState> = {
+        [componentName]: {
+          enabled: false,
+        },
+      };
+      this.state.components.set(context, compState);
+    }
   }
-
-  // 컴포넌트 해제
-  unregisterComponent(componentId: string) {
-    this.state.components.delete(componentId);
-    this.state.history.push({
-      type: 'componentUnregistered',
-      payload: { componentId }
-    });
-  }
-
-  // 상태 변경 기록
-  recordChange(changes: Change[]) {
-    this.state.updates++;
-    this.state.history.push({
-      type: 'stateChange',
-      payload: changes
-    });
-  }
-
-  // 컴포넌트 목록 가져오기
-  getComponents() {
-    return Array.from(this.state.components);
-  }
-
-  // 히스토리 가져오기
-  getHistory() {
-    return [...this.state.history];
-  }
-
-  // 업데이트 횟수 가져오기
-  getUpdates() {
-    return this.state.updates;
-  }
-} 
+}

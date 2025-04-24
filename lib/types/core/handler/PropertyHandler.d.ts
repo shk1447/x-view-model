@@ -1,9 +1,11 @@
 import { Change, Observable } from "../observer";
 import { GetDotKeys, GetFunctionKeys, GetFunctionParams, GetFunctionReturn } from "../types";
+import { DevToolsHandler } from "./DevToolsHandler";
 import { EventHandler } from "./EventHandler";
 import { ServiceHandler } from "./ServiceHandler";
 export type SendHistory = {
     name: string;
+    componentName: string;
     payload: any;
     timestamp: number;
     result?: any;
@@ -31,8 +33,10 @@ export declare class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     private _sendHistory;
     private _historyHandler;
     private _historyMaxSize;
+    private _componentName;
     services: ServiceHandler<R>;
-    constructor(init_property: R, options?: PropertyHandlerOptions<R>);
+    private devTools?;
+    constructor(init_property: R, options?: PropertyHandlerOptions<R>, devTools?: DevToolsHandler);
     use(middleware: Middleware<R>): this;
     private executeMiddlewares;
     get state(): Observable & R;

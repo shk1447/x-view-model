@@ -5,6 +5,7 @@ import {
   GetFunctionParams,
   GetFunctionReturn,
 } from "../types";
+import { DevToolsHandler } from "./DevToolsHandler";
 import { EventHandler } from "./EventHandler";
 
 import { ServiceHandler } from "./ServiceHandler";
@@ -12,6 +13,7 @@ import { ServiceHandler } from "./ServiceHandler";
 // SendHistory 타입 정의 추가
 export type SendHistory = {
   name: string;
+  componentName: string;
   payload: any;
   timestamp: number;
   result?: any;
@@ -55,10 +57,17 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   private _sendHistory: SendHistory[] = [];
   private _historyHandler: HistoryHandler<R>;
   private _historyMaxSize: number;
+  private _componentName: string = "Unknown";
 
   public services: ServiceHandler<R>;
 
-  constructor(init_property: R, options?: PropertyHandlerOptions<R>) {
+  private devTools?: DevToolsHandler;
+
+  constructor(
+    init_property: R,
+    options?: PropertyHandlerOptions<R>,
+    devTools?: DevToolsHandler
+  ) {
     super();
     this._property = init_property;
     this._options = options;
@@ -72,6 +81,8 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
     this._historyMaxSize = options?.history?.maxSize || 100;
 
     this.middlewares = options?.middlewares || [];
+
+    this.devTools = devTools;
   }
 
   use(middleware: Middleware<R>) {
@@ -249,6 +260,7 @@ export class PropertyHandler<R> extends EventHandler<GetDotKeys<R>> {
   > {
     const history: SendHistory = {
       name: name as string,
+      componentName: this._componentName,
       payload,
       timestamp: Date.now(),
     };

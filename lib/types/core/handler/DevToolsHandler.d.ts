@@ -1,22 +1,12 @@
-import { Change } from '../observer';
+import { PropertyHandler } from "./PropertyHandler";
+export type ComponentState = {
+    enabled: boolean;
+};
 export interface DevToolsState {
-    components: Set<string>;
-    history: Array<{
-        type: string;
-        payload: any;
-    }>;
-    updates: number;
+    components: Map<PropertyHandler<any>, Record<string, ComponentState>>;
 }
 export declare class DevToolsHandler {
     private state;
     constructor();
-    registerComponent(componentId: string): void;
-    unregisterComponent(componentId: string): void;
-    recordChange(changes: Change[]): void;
-    getComponents(): string[];
-    getHistory(): {
-        type: string;
-        payload: any;
-    }[];
-    getUpdates(): number;
+    registerComponent(context: PropertyHandler<any>, componentName: string): void;
 }
