@@ -13,7 +13,7 @@ import {
 
 import { DevToolsHandler } from "./core/handler/DevToolsHandler";
 
-export * from "./core/handler/PropertyHandler";
+export * from "./core/handler/DevToolsHandler";
 
 export type DataModel<T> = T extends (
   ...args: never[]
@@ -43,19 +43,27 @@ export const registViewModel = <T, R = undefined>(
   return vm;
 };
 
-const getComponentName = () => {
+const getComponentInfo = () => {
   if (process.env.NODE_ENV !== "development") {
-    return "Unknown";
+    return {
+      name: "Unknown",
+      paths: [] as string[],
+    };
   }
   try {
     throw new Error();
   } catch (error) {
     if (!(error instanceof Error)) {
-      return "Unknown";
+      return {
+        name: "Unknown",
+        paths: [] as string[],
+      };
     }
 
     const stack = error.stack || "";
     const stackLines = stack.split("\n");
+    let componentName = "Anonymous";
+    const paths: string[] = [];
 
     // 더 복잡한 정규식으로 다양한 패턴 처리
     const componentPatterns = [
@@ -66,30 +74,70 @@ const getComponentName = () => {
 
     for (let i = 2; i < Math.min(stackLines.length, 8); i++) {
       const line = stackLines[i];
+      // 경로 추출 시도
+
+      // 컴포넌트 이름 추출 시도
       for (const pattern of componentPatterns) {
         const match = line.match(pattern);
         if (match && match[1]) {
-          return match[1];
+          const pathMatch = line.match(/\((.+?):\d+:\d+\)/);
+          if (pathMatch && pathMatch[1]) {
+            const fullPath = pathMatch[1];
+            // 경로에서 파일 시스템 경로 부분만 추출 (file:/// 같은 프로토콜 제거)
+            const normalizedPath = fullPath.replace(
+              /^(file:\/\/\/|\/)[A-Za-z]:\//,
+              ""
+            );
+
+            // 경로를 폴더 이름으로 분리
+            // Windows 경로(\)와 Unix 경로(/)를 모두 고려
+            const pathParts = normalizedPath.split(/[\/\\]/).filter(Boolean);
+
+            // 확장자가 있는 마지막 부분(파일명)은 제외
+            if (
+              pathParts.length > 0 &&
+              /\.(jsx|tsx|js|ts)$/.test(pathParts[pathParts.length - 1])
+            ) {
+              pathParts.pop();
+            }
+
+            // 각 폴더 이름을 paths 배열에 추가
+            paths.push(...pathParts);
+          }
+          componentName = match[1];
+          break;
         }
+      }
+
+      if (componentName !== "Anonymous") {
+        break;
       }
     }
 
-    // 파일명에서 컴포넌트 이름 추출 시도
-    const fileNameMatch = stack.match(
-      /\/([A-Z][A-Za-z0-9_$]*)\.(jsx|tsx|js|ts)/
-    );
-    if (fileNameMatch && fileNameMatch[1]) {
-      return fileNameMatch[1];
+    // 파일명에서 컴포넌트 이름 추출 시도 (이름을 찾지 못한 경우)
+    if (componentName === "Anonymous") {
+      const fileNameMatch = stack.match(
+        /\/([A-Z][A-Za-z0-9_$]*)\.(jsx|tsx|js|ts)/
+      );
+      if (fileNameMatch && fileNameMatch[1]) {
+        componentName = fileNameMatch[1];
+      }
     }
 
-    return "Anonymous";
+    return {
+      name: componentName,
+      paths,
+    };
   }
 };
 
 export const useViewModel = <T, R>(
   vm: ViewModel<T, R>,
   keys?: GetDotKeys<T>[],
-  componentName?: string
+  componentInfo?: {
+    name: string;
+    paths: string[];
+  }
 ): [
   T,
   <K extends GetFunctionKeys<T>>(
@@ -103,19 +151,29 @@ export const useViewModel = <T, R>(
   >,
   R
 ] => {
-  if (!componentName) {
-    componentName = useMemo(() => {
-      return getComponentName();
+  if (componentInfo) {
+    componentInfo = componentInfo;
+  } else {
+    componentInfo = useMemo(() => {
+      return getComponentInfo();
     }, []);
   }
-  devTools.registerComponent(vm.context, componentName);
+
+  devTools.registerComponent(
+    vm.context,
+    componentInfo.name,
+    componentInfo.paths
+  );
 
   const state = useInterfaceHandle(keys as any, vm.context);
 
   return [
     state,
     vm.context.send.bind(
-      Object.assign(vm.context, { _componentName: componentName })
+      Object.assign(vm.context, {
+        _componentName: componentInfo.name,
+        _componentPaths: componentInfo.paths,
+      })
     ),
     vm.ref,
   ];
@@ -169,10 +227,10 @@ export const useComputedViewModel = <T, R, S>(
   >,
   R
 ] => {
-  const compName = useMemo(() => {
-    return getComponentName();
+  const componentInfo = useMemo(() => {
+    return getComponentInfo();
   }, []);
-  const [state, send, controller] = useViewModel(vm, keys, compName);
+  const [state, send, controller] = useViewModel(vm, keys, componentInfo);
   const selectedState = useMemo(() => selector(state), [state, selector]);
 
   return [selectedState, send, controller];
@@ -194,10 +252,10 @@ export const useMemoizedViewModel = <T, R, K extends GetDotKeysImpl<T>>(
   >,
   R
 ] => {
-  const compName = useMemo(() => {
-    return getComponentName();
+  const componentInfo = useMemo(() => {
+    return getComponentInfo();
   }, []);
-  const [fullState, send, ref] = useViewModel(vm, keys as any, compName);
+  const [fullState, send, ref] = useViewModel(vm, keys as any, componentInfo);
 
   return [fullState, send, ref] as any;
 };

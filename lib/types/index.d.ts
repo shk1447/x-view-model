@@ -1,7 +1,7 @@
 import { PropertyHandler, PropertyHandlerOptions } from "./core/handler/PropertyHandler";
 import { GetDotKeys, GetFunctionKeys, GetFunctionParams, GetFunctionReturn } from "./core/types";
 import { DevToolsHandler } from "./core/handler/DevToolsHandler";
-export * from "./core/handler/PropertyHandler";
+export * from "./core/handler/DevToolsHandler";
 export type DataModel<T> = T extends (...args: never[]) => Promise<infer Response> ? Response : never;
 export type ViewModel<T, R> = {
     context: PropertyHandler<T>;
@@ -9,7 +9,10 @@ export type ViewModel<T, R> = {
 };
 export declare const devTools: DevToolsHandler;
 export declare const registViewModel: <T, R = undefined>(data: T, options?: PropertyHandlerOptions<T> | undefined, ref?: R | undefined) => ViewModel<T, R>;
-export declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[] | undefined, componentName?: string) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
+export declare const useViewModel: <T, R>(vm: ViewModel<T, R>, keys?: GetDotKeys<T>[] | undefined, componentInfo?: {
+    name: string;
+    paths: string[];
+}) => [T, <K extends GetFunctionKeys<T>>(name: K, payload: GetFunctionParams<T>[K], async?: boolean) => Promise<GetFunctionReturn<T>[K] extends Promise<infer U> ? U : GetFunctionReturn<T>[K]>, R];
 type GetDotKeysImpl<T> = T extends object ? {
     [K in keyof T & (string | number)]: T[K] extends object ? K | `${K}.${GetDotKeysImpl<T[K]>}` : K;
 }[keyof T & (string | number)] : never;

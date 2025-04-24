@@ -1,6 +1,7 @@
 import { PropertyHandler } from "./PropertyHandler";
 export type ComponentState = {
     enabled: boolean;
+    paths: string[];
 };
 export interface DevToolsState {
     components: Map<PropertyHandler<any>, Record<string, ComponentState>>;
@@ -8,5 +9,6 @@ export interface DevToolsState {
 export declare class DevToolsHandler {
     private state;
     constructor();
-    registerComponent(context: PropertyHandler<any>, componentName: string): void;
+    components(): Map<PropertyHandler<any>, Record<string, ComponentState>>;
+    registerComponent(context: PropertyHandler<any>, componentName: string, componentPaths?: string[]): void;
 }
