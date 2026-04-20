@@ -1,5 +1,5 @@
 # x-view-model
-
+React 애플리케이션을 위한 가벼우면서 타입 안전한 MVVM 상태 관리 솔루션
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/x-view-model.svg?style=flat)](https://www.npmjs.com/package/x-view-model)
@@ -7,8 +7,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/x-view-model)](https://bundlephobia.com/package/x-view-model)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
-
-React 애플리케이션을 위한 가벼우면서 타입 안전한 MVVM 상태 관리 솔루션
 
 </div>
 
